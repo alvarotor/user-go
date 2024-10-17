@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+option go_package = "github.com/alvarotor/user-go/user";
+
+package user;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service User {
+  rpc CreateUser (UserRequest) returns (UserResponse) {}
+  rpc GetUser (MailUserRequest) returns (UserResponse) {}
+  rpc UpdateUser (UserRequest) returns (UserResponse) {}
+  rpc DeleteUser (MailUserRequest) returns (google.protobuf.Empty) {}
+  rpc ListUsers (google.protobuf.Empty) returns (ListUsersResponse) {}
+}
+
+message UserRequest {
+  string email = 1;
+  string password = 2;
+  string name = 3;
+  uint32 age = 4;
+  string gender = 5;
+  string country_origin = 6;
+  string profile_pic = 7;
+  bool validated = 8;
+  string validation_code = 9;
+  bool admin = 10;
+  bool super_admin = 11;
+  uint32 login_length_time = 12;
+  string code = 13;
+  google.protobuf.Timestamp code_expire = 14;
+}
+
+message MailUserRequest {
+  string email = 1;
+}
+
+message ListUsersResponse {
+  repeated UserResponse users = 1;
+}
+
+message UserResponse {
+  string email = 1;
+  string name = 2;
+  uint32 age = 3;
+  string gender = 4;
+  string country_origin = 5;
+  string profile_pic = 6;
+  bool validated = 7;
+  uint32 login_length_time = 8;
+  bool admin = 9;
+  bool super_admin = 10;
+}
