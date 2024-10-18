@@ -28,7 +28,7 @@ func main() {
 	defer cancel()
 	r, err := c.GetUser(ctx, &pb.MailUserRequest{Email: name})
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could get user: %v", err)
 	}
-	log.Printf("Greeting: %s", r.GetEmail())
+	log.Printf("User: %s", r.GetEmail())
 }
