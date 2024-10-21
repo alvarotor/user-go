@@ -3,17 +3,15 @@ package main
 import (
 	"context"
 	"log"
-	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
-	pb "github.com/alvarotor/user-go/user"
+	pb "github.com/alvarotor/user-go/server/user-pb"
 )
 
 func main() {
 	addr := "localhost:50051"
-	name := "Name to greet"
 
 	// Set up a connection to the server.
 	conn, err := grpc.NewClient(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -23,12 +21,18 @@ func main() {
 	defer conn.Close()
 	c := pb.NewUserClient(conn)
 
-	// Contact the server and print out its response.
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	r, err := c.GetUser(ctx, &pb.MailUserRequest{Email: name})
-	if err != nil {
-		log.Fatalf("could get user: %v", err)
+	// Create a new user
+	user := &pb.UserRequest{
+		Email:    "test@example.com",
+		Password: "password123",
+		Name:     "Test User",
+		// Set other fields as needed
 	}
-	log.Printf("User: %s", r.GetEmail())
+	r, err := c.Create(context.Background(), user)
+	if err != nil {
+		log.Fatalf("could not create user: %v", err)
+	}
+	log.Printf("Created user with ID: %d", r.Id)
+
+	// Implement other operations (Get, Update, Delete, List) as needed
 }
