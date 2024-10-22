@@ -41,6 +41,7 @@ func main() {
 	userServer := server.UserServer{
 		Controller: con,
 		Svc:        svc,
+		Log:        l,
 	}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", conf.PROJECT_PORT))

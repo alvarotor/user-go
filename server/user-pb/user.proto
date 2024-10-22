@@ -6,7 +6,6 @@ package user;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
-import "google/protobuf/any.proto";
 
 service User {
   rpc Create (UserRequest) returns (UserIDRequest) {}
@@ -25,7 +24,6 @@ message UserRequest {
   string country_origin = 6;
   string profile_pic = 7;
   uint32 login_length_time = 12;
-  google.protobuf.Any profile = 15;
 }
 
 message UserIDRequest {
@@ -47,12 +45,11 @@ message UserResponse {
   uint32 gender = 4;
   string country_origin = 5;
   string profile_pic = 6;
-  bool validated = 7;
-  uint32 login_length_time = 8;
+  uint32 login_length_time = 7;
+  bool validated = 8;
   bool admin = 9;
   bool super_admin = 10;
-  string validation_code = 12;
-  string code = 16;
-  google.protobuf.Timestamp code_expire = 17;
-  google.protobuf.Any profile = 18;
+  string validation_code = 11;
+  string code = 12;
+  google.protobuf.Timestamp code_expire = 13;
 }
