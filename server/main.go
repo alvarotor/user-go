@@ -20,7 +20,7 @@ import (
 )
 
 func main() {
-	var conf *model.Config
+	var conf model.Config
 
 	if conf.IsLocalENV() {
 		err := godotenv.Load()
@@ -28,17 +28,17 @@ func main() {
 			log.Fatal("Error loading .env file")
 		}
 	}
-	checkEnvVarsConf(conf)
+	checkEnvVarsConf(&conf)
 
 	opts := &slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}
 	l := slog.New(slog.NewJSONHandler(os.Stdout, opts))
 
-	dbUser := db.GetDB_PG(conf, l)
+	dbUser := db.GetDB_PG(&conf, l)
 
 	svc := service.NewUserService(dbUser)
-	con := controller.NewUserController(l, svc, conf)
+	con := controller.NewUserController(l, svc, &conf)
 	userServer := server.UserServer{
 		Controller: con,
 		Svc:        svc,

@@ -1,7 +1,6 @@
 package db
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"log/slog"
@@ -26,13 +25,16 @@ func GetDB_PG(cfg *model.Config, l *slog.Logger) *gorm.DB {
 
 	l.Info("DB PostGres Connection established...")
 
-	if err = db.AutoMigrate(&model.User{}); err == nil && db.Migrator().HasTable(&model.User{}) {
-		if err := db.First(&model.User{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
-			db.Create(&model.User{
-				Email: "goodbytes23@gmail.com",
-				Name:  "Alvaro",
-			})
-		}
+	if err = db.AutoMigrate(&model.User{}); err == nil {
+		log.Fatal("failed to AutoMigrate database PostGres")
+		// &&
+		// db.Migrator().HasTable(&model.User{}) {
+		// if err := db.First(&model.User{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+		// 	// db.Create(&model.User{
+		// 	// 	Email: "goodbytes23@gmail.com",
+		// 	// 	Name:  "Alvaro",
+		// 	// })
+		// }
 	}
 
 	return db
