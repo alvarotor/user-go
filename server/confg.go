@@ -18,6 +18,7 @@ func checkEnvVarsConf(conf *model.Config) {
 	checkEnvVar("RandomStringValidation")
 	checkEnvVar("SizeRandomStringValidation")
 	checkEnvVar("Issuer")
+	checkEnvVar("JWT_KEY")
 
 	PROJECT_PORT, err := strconv.Atoi(os.Getenv("PROJECT_PORT"))
 	if err != nil {
@@ -36,6 +37,7 @@ func checkEnvVarsConf(conf *model.Config) {
 	}
 	conf.SizeRandomStringValidation = SizeRandomStringValidation
 	conf.Issuer = os.Getenv("Issuer")
+	conf.JWTKey = []byte(os.Getenv("JWT_KEY"))
 }
 
 func checkEnvVar(envVar string) {

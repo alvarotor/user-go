@@ -13,24 +13,30 @@ service User {
   rpc Update (UpdateUserRequest) returns (UserIDResponse) {}
   rpc Delete (UserIDRequest) returns (UserIDResponse) {}
   rpc List (google.protobuf.Empty) returns (ListUsersResponse) {}
+  rpc Login (UserLoginRequest) returns (UserIDResponse) {}
+  rpc LogOut (UserIDRequest) returns (UserIDResponse) {}
+  rpc Validate (UserValidateRequest) returns (UserTokenResponse) {}
 }
 
 message UserRequest {
   string email = 1;
   string password = 2;
   string name = 3;
-  uint32 age = 4;
-  uint32 gender = 5;
-  string country_origin = 6;
-  string profile_pic = 7;
-  uint32 login_length_time = 8;
-  bool validated = 9;
-  string validation_code = 10;
-  bool admin = 11;
-  bool super_admin = 12;
-  string code = 13;
-  google.protobuf.Timestamp code_expire = 14;
+  string profile_pic = 4;
+  uint32 login_length_time = 5;
+  bool validated = 6;
+  string validation_code = 7;
+  bool admin = 8;
+  bool super_admin = 9;
+  string code = 10;
+  google.protobuf.Timestamp code_expire = 11;
 }
+
+message UserLoginRequest {
+  string email = 1;
+  uint32 login_length_time = 2;
+}
+
 
 message UserIDRequest {
   uint32 id = 1;
@@ -43,6 +49,7 @@ message UpdateUserRequest {
 
 message UserIDResponse {
   uint32 id = 1;
+  uint32 status = 2;
 }
 
 message ListUsersResponse {
@@ -52,15 +59,24 @@ message ListUsersResponse {
 message UserResponse {
   string email = 1;
   string name = 2;
-  uint32 age = 3;
-  uint32 gender = 4;
-  string country_origin = 5;
-  string profile_pic = 6;
-  uint32 login_length_time = 7;
-  bool validated = 8;
-  string validation_code = 9;
-  bool admin = 10;
-  bool super_admin = 11;
-  string code = 12;
-  google.protobuf.Timestamp code_expire = 13;
+  string profile_pic = 3;
+  uint32 login_length_time = 4;
+  bool validated = 5;
+  string validation_code = 6;
+  bool admin = 7;
+  bool super_admin = 8;
+  string code = 9;
+  google.protobuf.Timestamp code_expire = 10;
+}
+
+message UserValidateRequest {
+  string code = 1;
+}
+
+message UserTokenResponse {
+  string name = 1;
+  string value = 2;
+  google.protobuf.Timestamp expires = 3;
+  string email = 4;
+  uint32 status = 5;
 }

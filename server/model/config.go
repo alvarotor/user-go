@@ -12,6 +12,7 @@ type Config struct {
 	RandomStringValidation     string `validate:"required"`
 	SizeRandomStringValidation int    `validate:"required"`
 	Issuer                     string `validate:"required"`
+	JWTKey                     []byte
 }
 
 func (c *Config) IsLocalENV() bool {

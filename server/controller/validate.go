@@ -11,8 +11,8 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func (u *controllerUser) Validate(c context.Context, code string, jwtKey string, issuer string) (int, model.Token, error) {
-	user, err := u.svc.GetByCode(c, code)
+func (u *controllerUser) Validate(c context.Context, code string) (int, model.Token, error) {
+	user, err := u.GetByCode(c, code)
 	if err != nil {
 		u.log.Info(err.Error())
 		return http.StatusNotFound, model.Token{}, err
@@ -31,7 +31,7 @@ func (u *controllerUser) Validate(c context.Context, code string, jwtKey string,
 	}
 
 	if !user.Validated {
-		err = u.svc.Validate(c, user.Email)
+		err = u.ValidateSvc(c, user.Email)
 		if err != nil {
 			u.log.Error(err.Error())
 			return http.StatusInternalServerError, model.Token{}, err
@@ -47,11 +47,11 @@ func (u *controllerUser) Validate(c context.Context, code string, jwtKey string,
 		SuperAdmin: user.SuperAdmin,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime), //unix milliseconds
-			Issuer:    issuer,
+			Issuer:    u.conf.Issuer,
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err := token.SignedString(u.conf.JWTKey)
 	if err != nil {
 		u.log.Error(err.Error())
 		return http.StatusInternalServerError, model.Token{}, err

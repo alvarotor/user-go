@@ -40,7 +40,6 @@ func main() {
 	con := controller.NewUserController(l, svc, &conf)
 	userServer := server.UserServer{
 		Controller: con,
-		Svc:        svc,
 		Log:        l,
 	}
 

@@ -11,11 +11,11 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int, error) {
-	user, err := u.svc.GetByEmail(c, userLogin.Email)
+func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int, uint, error) {
+	user, err := u.GetByEmail(c, userLogin.Email)
 	if err != nil && err.Error() != "user not found" {
 		u.log.Error(err.Error())
-		return http.StatusInternalServerError, err
+		return http.StatusInternalServerError, 0, err
 	}
 
 	tenMinutes := time.Now().UTC().Add(10 * time.Minute)
@@ -29,14 +29,14 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 		user.CodeExpire = tenMinutes
 		user.Validated = false
 
-		user, err := u.svc.Create(c, *user)
+		user, err := u.Create(c, *user)
 		if err != nil {
 			u.log.Error(err.Error())
-			return http.StatusInternalServerError, err
+			return http.StatusInternalServerError, 0, err
 		}
 
 		if user.ID == 0 {
-			return http.StatusInternalServerError, errors.New("user not created")
+			return http.StatusInternalServerError, 0, errors.New("user not created")
 		}
 
 	} else {
@@ -45,16 +45,16 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 		user.CodeExpire = tenMinutes
 		user.LoginLengthTime = uint32(userLogin.Time)
 
-		err := u.svc.Update(c, user.ID, *user)
+		err := u.Update(c, user.ID, *user)
 		if err != nil {
 			u.log.Error(err.Error())
-			return http.StatusInternalServerError, err
+			return http.StatusInternalServerError, 0, err
 		}
 	}
 
 	u.log.Info("user code: " + user.Code)
 
-	return http.StatusOK, nil
+	return http.StatusOK, user.ID, nil
 }
 
 func (u *controllerUser) generateRandomString(length int) string {

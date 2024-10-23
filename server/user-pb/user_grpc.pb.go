@@ -20,11 +20,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_Create_FullMethodName = "/user.User/Create"
-	User_Get_FullMethodName    = "/user.User/Get"
-	User_Update_FullMethodName = "/user.User/Update"
-	User_Delete_FullMethodName = "/user.User/Delete"
-	User_List_FullMethodName   = "/user.User/List"
+	User_Create_FullMethodName   = "/user.User/Create"
+	User_Get_FullMethodName      = "/user.User/Get"
+	User_Update_FullMethodName   = "/user.User/Update"
+	User_Delete_FullMethodName   = "/user.User/Delete"
+	User_List_FullMethodName     = "/user.User/List"
+	User_Login_FullMethodName    = "/user.User/Login"
+	User_LogOut_FullMethodName   = "/user.User/LogOut"
+	User_Validate_FullMethodName = "/user.User/Validate"
 )
 
 // UserClient is the client API for User service.
@@ -36,6 +39,9 @@ type UserClient interface {
 	Update(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserIDResponse, error)
 	Delete(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserIDResponse, error)
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	Login(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserIDResponse, error)
+	LogOut(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserIDResponse, error)
+	Validate(ctx context.Context, in *UserValidateRequest, opts ...grpc.CallOption) (*UserTokenResponse, error)
 }
 
 type userClient struct {
@@ -96,6 +102,36 @@ func (c *userClient) List(ctx context.Context, in *emptypb.Empty, opts ...grpc.C
 	return out, nil
 }
 
+func (c *userClient) Login(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserIDResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserIDResponse)
+	err := c.cc.Invoke(ctx, User_Login_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) LogOut(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserIDResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserIDResponse)
+	err := c.cc.Invoke(ctx, User_LogOut_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) Validate(ctx context.Context, in *UserValidateRequest, opts ...grpc.CallOption) (*UserTokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserTokenResponse)
+	err := c.cc.Invoke(ctx, User_Validate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -105,6 +141,9 @@ type UserServer interface {
 	Update(context.Context, *UpdateUserRequest) (*UserIDResponse, error)
 	Delete(context.Context, *UserIDRequest) (*UserIDResponse, error)
 	List(context.Context, *emptypb.Empty) (*ListUsersResponse, error)
+	Login(context.Context, *UserLoginRequest) (*UserIDResponse, error)
+	LogOut(context.Context, *UserIDRequest) (*UserIDResponse, error)
+	Validate(context.Context, *UserValidateRequest) (*UserTokenResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -129,6 +168,15 @@ func (UnimplementedUserServer) Delete(context.Context, *UserIDRequest) (*UserIDR
 }
 func (UnimplementedUserServer) List(context.Context, *emptypb.Empty) (*ListUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedUserServer) Login(context.Context, *UserLoginRequest) (*UserIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedUserServer) LogOut(context.Context, *UserIDRequest) (*UserIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
+}
+func (UnimplementedUserServer) Validate(context.Context, *UserValidateRequest) (*UserTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Validate not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -241,6 +289,60 @@ func _User_List_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Login(ctx, req.(*UserLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_LogOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).LogOut(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_LogOut_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).LogOut(ctx, req.(*UserIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_Validate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserValidateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Validate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Validate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Validate(ctx, req.(*UserValidateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -267,6 +369,18 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _User_List_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _User_Login_Handler,
+		},
+		{
+			MethodName: "LogOut",
+			Handler:    _User_LogOut_Handler,
+		},
+		{
+			MethodName: "Validate",
+			Handler:    _User_Validate_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

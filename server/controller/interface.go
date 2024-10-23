@@ -5,14 +5,12 @@ import (
 
 	"github.com/alvarotor/user-go/server/dto"
 	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/service"
 )
 
 type IControllerUser interface {
-	Create(context.Context, model.User) (int, error)
-	Login(context.Context, dto.UserLogin) (int, error)
+	service.IUserService
+	Login(context.Context, dto.UserLogin) (int, uint, error)
 	LogOut(context.Context, string) (int, error)
-	Get(context.Context, uint) (int, dto.UserResponse, error)
-	Update(context.Context, uint, dto.UserRequest) (int, error)
-	Delete(context.Context, uint, bool) (int, error)
-	Validate(context.Context, string, string, string) (int, model.Token, error)
+	Validate(context.Context, string) (int, model.Token, error)
 }

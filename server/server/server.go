@@ -2,12 +2,13 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"time"
 
 	"github.com/alvarotor/user-go/server/controller"
+	"github.com/alvarotor/user-go/server/dto"
 	"github.com/alvarotor/user-go/server/model"
-	"github.com/alvarotor/user-go/server/service"
 	pb "github.com/alvarotor/user-go/server/user-pb"
 	"github.com/go-playground/validator/v10"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -18,18 +19,15 @@ type UserServer struct {
 	pb.UnimplementedUserServer
 	// users map[uint32]*pb.UserResponse
 	Controller controller.IControllerUser
-	Svc        service.IUserService
 	Log        *slog.Logger
 }
 
 func NewServer(
 	controller controller.IControllerUser,
-	svc service.IUserService,
 	log *slog.Logger,
 ) *UserServer {
 	return &UserServer{
 		Controller: controller,
-		Svc:        svc,
 		Log:        log,
 	}
 }
@@ -39,9 +37,6 @@ func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 		Email:           req.Email,
 		Name:            req.Name,
 		Password:        req.Password,
-		Age:             req.Age,
-		Gender:          req.Gender,
-		CountryOrigin:   req.CountryOrigin,
 		ProfilePic:      req.ProfilePic,
 		LoginLengthTime: req.LoginLengthTime,
 		Validated:       false,
@@ -52,7 +47,7 @@ func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 		CodeExpire:      time.Time{},
 	}
 
-	// s.Log.Info(fmt.Sprintf("%v\n", user))
+	s.Log.Info(fmt.Sprintf("%v\n", user))
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	err := validate.Struct(user)
@@ -61,7 +56,7 @@ func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 		return &pb.UserIDRequest{}, err
 	}
 
-	userCreated, err := s.Svc.Create(ctx, user)
+	userCreated, err := s.Controller.Create(ctx, user)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserIDRequest{}, err
@@ -74,7 +69,7 @@ func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 
 func (s *UserServer) Get(ctx context.Context, req *pb.UserIDRequest) (*pb.UserResponse, error) {
 
-	user, err := s.Svc.Get(ctx, uint(req.Id), "")
+	user, err := s.Controller.Get(ctx, uint(req.Id), "")
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserResponse{}, err
@@ -85,9 +80,6 @@ func (s *UserServer) Get(ctx context.Context, req *pb.UserIDRequest) (*pb.UserRe
 		Name:            user.Name,
 		ProfilePic:      user.ProfilePic,
 		Validated:       user.Validated,
-		Age:             uint32(user.Age),
-		Gender:          uint32(user.Gender),
-		CountryOrigin:   user.CountryOrigin,
 		Admin:           user.Admin,
 		SuperAdmin:      user.SuperAdmin,
 		LoginLengthTime: user.LoginLengthTime,
@@ -103,9 +95,6 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 		Email:           req.User.Email,
 		Name:            req.User.Name,
 		Password:        req.User.Password,
-		Age:             req.User.Age,
-		Gender:          req.User.Gender,
-		CountryOrigin:   req.User.CountryOrigin,
 		ProfilePic:      req.User.ProfilePic,
 		LoginLengthTime: req.User.LoginLengthTime,
 		Admin:           req.User.Admin,
@@ -122,7 +111,7 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 		return &pb.UserIDResponse{}, err
 	}
 
-	err = s.Svc.Update(ctx, uint(req.Id), user)
+	err = s.Controller.Update(ctx, uint(req.Id), user)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserIDResponse{}, err
@@ -136,7 +125,7 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 
 func (s *UserServer) Delete(ctx context.Context, req *pb.UserIDRequest) (*pb.UserIDResponse, error) {
 
-	err := s.Svc.Delete(ctx, uint(req.Id), false)
+	err := s.Controller.Delete(ctx, uint(req.Id), false)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserIDResponse{}, err
@@ -149,7 +138,7 @@ func (s *UserServer) Delete(ctx context.Context, req *pb.UserIDRequest) (*pb.Use
 
 func (s *UserServer) List(ctx context.Context, _ *emptypb.Empty) (*pb.ListUsersResponse, error) {
 
-	users, err := s.Svc.GetAll(ctx)
+	users, err := s.Controller.GetAll(ctx)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.ListUsersResponse{}, err
@@ -163,9 +152,6 @@ func (s *UserServer) List(ctx context.Context, _ *emptypb.Empty) (*pb.ListUsersR
 			Name:            user.Name,
 			ProfilePic:      user.ProfilePic,
 			Validated:       user.Validated,
-			Age:             uint32(user.Age),
-			Gender:          uint32(user.Gender),
-			CountryOrigin:   user.CountryOrigin,
 			Admin:           user.Admin,
 			SuperAdmin:      user.SuperAdmin,
 			LoginLengthTime: user.LoginLengthTime,
@@ -178,5 +164,66 @@ func (s *UserServer) List(ctx context.Context, _ *emptypb.Empty) (*pb.ListUsersR
 
 	return &pb.ListUsersResponse{
 		Users: pbUsers,
+	}, nil
+}
+
+func (s *UserServer) Login(ctx context.Context, req *pb.UserLoginRequest) (*pb.UserIDResponse, error) {
+	userLogin := dto.UserLogin{
+		Email: req.Email,
+		Time:  uint(req.LoginLengthTime),
+	}
+
+	validator := validator.New(validator.WithRequiredStructEnabled())
+	err := validator.Struct(userLogin)
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.UserIDResponse{}, err
+	}
+
+	status, id, err := s.Controller.Login(ctx, userLogin)
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.UserIDResponse{}, err
+	}
+
+	return &pb.UserIDResponse{
+		Id:     uint32(id),
+		Status: uint32(status),
+	}, nil
+}
+
+func (s *UserServer) LogOut(ctx context.Context, req *pb.UserIDRequest) (*pb.UserIDResponse, error) {
+	user, err := s.Controller.Get(ctx, uint(req.Id), "")
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.UserIDResponse{}, err
+	}
+	email := user.Email
+	status, err := s.Controller.LogOut(ctx, email)
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.UserIDResponse{}, err
+	}
+
+	return &pb.UserIDResponse{
+		Id:     uint32(req.Id),
+		Status: uint32(status),
+	}, nil
+}
+
+func (s *UserServer) Validate(ctx context.Context, req *pb.UserValidateRequest) (*pb.UserTokenResponse, error) {
+
+	status, token, err := s.Controller.Validate(ctx, req.Code)
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.UserTokenResponse{}, err
+	}
+
+	return &pb.UserTokenResponse{
+		Name:    token.Name,
+		Value:   token.Value,
+		Expires: timestamppb.New(token.Expires),
+		Email:   token.Email,
+		Status:  uint32(status),
 	}, nil
 }

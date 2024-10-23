@@ -14,7 +14,7 @@ type ClaimsResponse struct {
 
 type UserLogin struct {
 	Email string `json:"email" validate:"email,required"`
-	Time  uint   `json:"time" validate:"required,gt=0"`
+	Time  uint   `json:"time" validate:"required,gt=0 lt=60"`
 }
 
 type UserResponse struct {

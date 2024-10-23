@@ -15,6 +15,8 @@ func GetDB_PG(cfg *model.Config, l *slog.Logger) *gorm.DB {
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		cfg.POSTGRES_HOST, cfg.POSTGRES_PORT, cfg.POSTGRES_USER, cfg.POSTGRES_PASSWORD, cfg.POSTGRES_DB)
 
+	l.Info(dsn)
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		TranslateError: true,
 	})

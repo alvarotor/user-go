@@ -8,15 +8,15 @@ import (
 )
 
 type controllerUser struct {
+	service.IUserService
 	log  *slog.Logger
-	svc  service.IUserService
 	conf *model.Config
 }
 
 func NewUserController(log *slog.Logger, svc service.IUserService, conf *model.Config) IControllerUser {
 	return &controllerUser{
-		svc:  svc,
-		log:  log,
-		conf: conf,
+		IUserService: svc,
+		log:          log,
+		conf:         conf,
 	}
 }
