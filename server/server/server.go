@@ -97,26 +97,23 @@ func (s *UserServer) Get(ctx context.Context, req *pb.UserIDRequest) (*pb.UserRe
 	}, nil
 }
 
-func (s *UserServer) Update(ctx context.Context, req *pb.UserRequest) (*pb.UserIDResponse, error) {
+func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserIDResponse, error) {
 
 	user := model.User{
-		Email:           req.Email,
-		Name:            req.Name,
-		Password:        req.Password,
-		Age:             req.Age,
-		Gender:          req.Gender,
-		CountryOrigin:   req.CountryOrigin,
-		ProfilePic:      req.ProfilePic,
-		LoginLengthTime: req.LoginLengthTime,
-		Validated:       false,
-		Admin:           false,
-		SuperAdmin:      false,
-		ValidationCode:  "1",
-		Code:            "1",
-		CodeExpire:      time.Time{},
+		Email:           req.User.Email,
+		Name:            req.User.Name,
+		Password:        req.User.Password,
+		Age:             req.User.Age,
+		Gender:          req.User.Gender,
+		CountryOrigin:   req.User.CountryOrigin,
+		ProfilePic:      req.User.ProfilePic,
+		LoginLengthTime: req.User.LoginLengthTime,
+		Admin:           req.User.Admin,
+		SuperAdmin:      req.User.SuperAdmin,
+		ValidationCode:  req.User.ValidationCode,
+		Code:            req.User.Code,
+		CodeExpire:      req.User.CodeExpire.AsTime(),
 	}
-
-	// s.Log.Info(fmt.Sprintf("%v\n", user))
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	err := validate.Struct(user)
@@ -133,16 +130,53 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 	}
 
 	return &pb.UserIDResponse{
-		Id: uint32(userUpdated.ID),
+		Id: uint32(req.Id),
 	}, nil
 }
 
 func (s *UserServer) Delete(ctx context.Context, req *pb.UserIDRequest) (*pb.UserIDResponse, error) {
-	// Implementation
-	return &pb.UserIDResponse{}, nil
+
+	err := s.Svc.Delete(ctx, uint(req.Id), false)
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.UserIDResponse{}, err
+	}
+
+	return &pb.UserIDResponse{
+		Id: uint32(req.Id),
+	}, nil
 }
 
 func (s *UserServer) List(ctx context.Context, _ *emptypb.Empty) (*pb.ListUsersResponse, error) {
-	// Implementation
-	return &pb.ListUsersResponse{}, nil
+
+	users, err := s.Svc.GetAll(ctx)
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.ListUsersResponse{}, err
+	}
+
+	pbUsers := []*pb.UserResponse{}
+
+	for _, user := range users {
+		pbUser := pb.UserResponse{
+			Email:           user.Email,
+			Name:            user.Name,
+			ProfilePic:      user.ProfilePic,
+			Validated:       user.Validated,
+			Age:             uint32(user.Age),
+			Gender:          uint32(user.Gender),
+			CountryOrigin:   user.CountryOrigin,
+			Admin:           user.Admin,
+			SuperAdmin:      user.SuperAdmin,
+			LoginLengthTime: user.LoginLengthTime,
+			ValidationCode:  user.ValidationCode,
+			Code:            user.Code,
+			CodeExpire:      timestamppb.New(user.CodeExpire),
+		}
+		pbUsers = append(pbUsers, &pbUser)
+	}
+
+	return &pb.ListUsersResponse{
+		Users: pbUsers,
+	}, nil
 }
