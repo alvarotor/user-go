@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/alvarotor/user-go/user";
+option go_package = "github.com/alvarotor/user-go/server/user-pb";
 
 package user;
 
