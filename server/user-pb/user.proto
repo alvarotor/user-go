@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option go_package = "github.com/alvarotor/user-go/server/user-pb";
 
-package user;
+package user_pb;
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
