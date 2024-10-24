@@ -13,7 +13,7 @@ service User {
   rpc Update (UpdateUserRequest) returns (UserIDResponse) {}
   rpc Delete (UserIDRequest) returns (UserIDResponse) {}
   rpc List (google.protobuf.Empty) returns (ListUsersResponse) {}
-  rpc Login (UserLoginRequest) returns (UserIDResponse) {}
+  rpc Login (UserLoginRequest) returns (UserLoginResponse) {}
   rpc LogOut (UserIDRequest) returns (UserIDResponse) {}
   rpc Validate (UserValidateRequest) returns (UserTokenResponse) {}
 }
@@ -36,7 +36,6 @@ message UserLoginRequest {
   string email = 1;
   uint32 login_length_time = 2;
 }
-
 
 message UserIDRequest {
   uint32 id = 1;
@@ -71,6 +70,11 @@ message UserResponse {
 
 message UserValidateRequest {
   string code = 1;
+}
+
+message UserLoginResponse {
+  string code = 1;
+  uint32 status = 2;
 }
 
 message UserTokenResponse {

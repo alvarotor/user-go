@@ -167,7 +167,7 @@ func (s *UserServer) List(ctx context.Context, _ *emptypb.Empty) (*pb.ListUsersR
 	}, nil
 }
 
-func (s *UserServer) Login(ctx context.Context, req *pb.UserLoginRequest) (*pb.UserIDResponse, error) {
+func (s *UserServer) Login(ctx context.Context, req *pb.UserLoginRequest) (*pb.UserLoginResponse, error) {
 	userLogin := dto.UserLogin{
 		Email: req.Email,
 		Time:  uint(req.LoginLengthTime),
@@ -177,17 +177,17 @@ func (s *UserServer) Login(ctx context.Context, req *pb.UserLoginRequest) (*pb.U
 	err := validator.Struct(userLogin)
 	if err != nil {
 		s.Log.Error(err.Error())
-		return &pb.UserIDResponse{}, err
+		return &pb.UserLoginResponse{}, err
 	}
 
-	status, id, err := s.Controller.Login(ctx, userLogin)
+	status, code, err := s.Controller.Login(ctx, userLogin)
 	if err != nil {
 		s.Log.Error(err.Error())
-		return &pb.UserIDResponse{}, err
+		return &pb.UserLoginResponse{}, err
 	}
 
-	return &pb.UserIDResponse{
-		Id:     uint32(id),
+	return &pb.UserLoginResponse{
+		Code:   code,
 		Status: uint32(status),
 	}, nil
 }

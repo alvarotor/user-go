@@ -10,7 +10,7 @@ import (
 
 type IControllerUser interface {
 	service.IUserService
-	Login(context.Context, dto.UserLogin) (int, uint, error)
+	Login(context.Context, dto.UserLogin) (int, string, error)
 	LogOut(context.Context, string) (int, error)
 	Validate(context.Context, string) (int, model.Token, error)
 }

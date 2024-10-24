@@ -11,11 +11,11 @@ import (
 	"golang.org/x/exp/rand"
 )
 
-func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int, uint, error) {
+func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int, string, error) {
 	user, err := u.GetByEmail(c, userLogin.Email)
 	if err != nil && err.Error() != "user not found" {
 		u.log.Error(err.Error())
-		return http.StatusInternalServerError, 0, err
+		return http.StatusInternalServerError, "", err
 	}
 
 	tenMinutes := time.Now().UTC().Add(10 * time.Minute)
@@ -32,11 +32,11 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 		user, err := u.Create(c, *user)
 		if err != nil {
 			u.log.Error(err.Error())
-			return http.StatusInternalServerError, 0, err
+			return http.StatusInternalServerError, "", err
 		}
 
 		if user.ID == 0 {
-			return http.StatusInternalServerError, 0, errors.New("user not created")
+			return http.StatusInternalServerError, "", errors.New("user not created")
 		}
 
 	} else {
@@ -48,13 +48,13 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 		err := u.Update(c, user.ID, *user)
 		if err != nil {
 			u.log.Error(err.Error())
-			return http.StatusInternalServerError, 0, err
+			return http.StatusInternalServerError, "", err
 		}
 	}
 
 	u.log.Info("user code: " + user.Code)
 
-	return http.StatusOK, user.ID, nil
+	return http.StatusOK, user.Code, nil
 }
 
 func (u *controllerUser) generateRandomString(length int) string {
