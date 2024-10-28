@@ -9,7 +9,7 @@ import (
 
 func (s *UserServer) Validate(ctx context.Context, req *pb.UserValidateRequest) (*pb.UserTokenResponse, error) {
 
-	status, token, err := s.Controller.Validate(ctx, req.Code)
+	status, token, err := s.Controller.Validate(ctx, req.GetCode())
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserTokenResponse{}, err

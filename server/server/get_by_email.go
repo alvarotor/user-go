@@ -24,7 +24,6 @@ func (s *UserServer) GetByEmail(ctx context.Context, req *pb.UserMailRequest) (*
 		Admin:           user.Admin,
 		SuperAdmin:      user.SuperAdmin,
 		LoginLengthTime: user.LoginLengthTime,
-		ValidationCode:  user.ValidationCode,
 		Code:            user.Code,
 		CodeExpire:      timestamppb.New(user.CodeExpire),
 	}, nil

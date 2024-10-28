@@ -14,7 +14,7 @@ func (u *controllerUser) TokenToUser(c context.Context, token string) (*model.Us
 	claims := &dto.ClaimsResponse{}
 
 	tkn, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (any, error) {
-		return []byte{}, nil
+		return u.conf.JWTKey, nil
 	})
 	if errors.Is(err, jwt.ErrSignatureInvalid) {
 		errMsg := "invalid signature token"
@@ -27,7 +27,7 @@ func (u *controllerUser) TokenToUser(c context.Context, token string) (*model.Us
 		return &model.User{}, errors.New(errMsg)
 	}
 	if err != nil {
-		errMsg := "parsing token"
+		errMsg := "error parsing token"
 		u.log.Error(errMsg)
 		return &model.User{}, errors.New(errMsg)
 	}

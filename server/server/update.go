@@ -8,7 +8,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserIDResponse, error) {
+func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserStatusResponse, error) {
 
 	user := model.User{
 		Email:           req.User.Email,
@@ -18,7 +18,6 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 		LoginLengthTime: req.User.LoginLengthTime,
 		Admin:           req.User.Admin,
 		SuperAdmin:      req.User.SuperAdmin,
-		ValidationCode:  req.User.ValidationCode,
 		Code:            req.User.Code,
 		CodeExpire:      req.User.CodeExpire.AsTime(),
 	}
@@ -27,18 +26,23 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 	err := validate.Struct(user)
 	if err != nil {
 		s.Log.Error(err.Error())
-		return &pb.UserIDResponse{}, err
+		return &pb.UserStatusResponse{}, err
 	}
 
-	err = s.Controller.Update(ctx, uint(req.Id), user)
+	userID, err := s.Controller.GetByEmail(ctx, req.User.Email)
 	if err != nil {
 		s.Log.Error(err.Error())
-		return &pb.UserIDResponse{}, err
+		return &pb.UserStatusResponse{}, err
+	}
+
+	err = s.Controller.Update(ctx, uint(userID.ID), user)
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.UserStatusResponse{}, err
 
 	}
 
-	return &pb.UserIDResponse{
-		Id:     uint32(req.Id),
+	return &pb.UserStatusResponse{
 		Status: 1,
 	}, nil
 }

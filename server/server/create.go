@@ -20,8 +20,7 @@ func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 		Validated:       false,
 		Admin:           false,
 		SuperAdmin:      false,
-		ValidationCode:  "1",
-		Code:            "1",
+		Code:            "",
 		CodeExpire:      time.Time{},
 	}
 

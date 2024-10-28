@@ -14,10 +14,9 @@ type User struct {
 	ProfilePic      string `gorm:"not null" json:"profile_pic"`
 	LoginLengthTime uint32 `json:"-" validate:"number"`
 	// server data
-	Validated      bool      `gorm:"not null;default:false" json:"validated" validate:"boolean"`
-	ValidationCode string    `gorm:"not null" json:"validation_code,omitempty"`
-	Admin          bool      `gorm:"not null;default:false" json:"-"`
-	SuperAdmin     bool      `gorm:"not null;default:false" json:"-"`
-	Code           string    `json:"-"`
-	CodeExpire     time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"-"`
+	Admin      bool      `gorm:"not null;default:false" json:"-"`
+	SuperAdmin bool      `gorm:"not null;default:false" json:"-"`
+	Validated  bool      `gorm:"not null;default:false" json:"validated" validate:"boolean"`
+	Code       string    `json:"-"`
+	CodeExpire time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"-"`
 }

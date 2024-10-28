@@ -41,7 +41,6 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, model.To
 	expirationTime := getExpirationTime(uint(user.LoginLengthTime))
 
 	claims := &dto.ClaimsResponse{
-		ID:         user.ID,
 		Email:      user.Email,
 		Admin:      user.Admin,
 		SuperAdmin: user.SuperAdmin,

@@ -23,7 +23,6 @@ func (s *UserServer) Get(ctx context.Context, req *pb.UserIDRequest) (*pb.UserRe
 		Admin:           user.Admin,
 		SuperAdmin:      user.SuperAdmin,
 		LoginLengthTime: user.LoginLengthTime,
-		ValidationCode:  user.ValidationCode,
 		Code:            user.Code,
 		CodeExpire:      timestamppb.New(user.CodeExpire),
 	}, nil

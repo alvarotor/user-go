@@ -10,7 +10,7 @@ import "google/protobuf/empty.proto";
 service User {
   rpc Create (UserRequest) returns (UserIDResponse) {}
   rpc Get (UserIDRequest) returns (UserResponse) {}
-  rpc Update (UpdateUserRequest) returns (UserIDResponse) {}
+  rpc Update (UpdateUserRequest) returns (UserStatusResponse) {}
   rpc Delete (UserDeleteRequest) returns (UserIDResponse) {}
   rpc List (google.protobuf.Empty) returns (ListUsersResponse) {}
   rpc Login (UserLoginRequest) returns (UserLoginResponse) {}
@@ -57,13 +57,16 @@ message UserDeleteRequest {
 }
 
 message UpdateUserRequest {
-  uint32 id = 1;
-  UserRequest user = 2;
+  UserRequest user = 1;
 }
 
 message UserIDResponse {
   uint32 id = 1;
   uint32 status = 2;
+}
+
+message UserStatusResponse {
+  uint32 status = 1;
 }
 
 message ListUsersResponse {
@@ -76,7 +79,6 @@ message UserResponse {
   string profile_pic = 3;
   uint32 login_length_time = 4;
   bool validated = 5;
-  string validation_code = 6;
   bool admin = 7;
   bool super_admin = 8;
   string code = 9;
