@@ -16,6 +16,7 @@ service User {
   rpc Login (UserLoginRequest) returns (UserLoginResponse) {}
   rpc LogOut (UserIDRequest) returns (UserIDResponse) {}
   rpc Validate (UserValidateRequest) returns (UserTokenResponse) {}
+  rpc GetByEmail (UserMailRequest) returns (UserResponse) {}
 }
 
 message UserRequest {
@@ -35,6 +36,10 @@ message UserRequest {
 message UserLoginRequest {
   string email = 1;
   uint32 login_length_time = 2;
+}
+
+message UserMailRequest {
+  string email = 1;
 }
 
 message UserIDRequest {
