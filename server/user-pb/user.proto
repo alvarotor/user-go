@@ -17,7 +17,7 @@ service User {
   rpc LogOut (UserIDRequest) returns (UserIDResponse) {}
   rpc Validate (UserValidateRequest) returns (UserTokenResponse) {}
   rpc GetByEmail (UserMailRequest) returns (UserResponse) {}
-  rpc TokenToUser(UserTokenRequest) returns (UserResponse) {}
+  rpc TokenToUser (UserTokenRequest) returns (UserResponse) {}
 }
 
 message UserRequest {
