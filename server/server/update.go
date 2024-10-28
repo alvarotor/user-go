@@ -38,6 +38,7 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 	}
 
 	return &pb.UserIDResponse{
-		Id: uint32(req.Id),
+		Id:     uint32(req.Id),
+		Status: 1,
 	}, nil
 }

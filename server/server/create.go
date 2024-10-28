@@ -10,7 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserIDRequest, error) {
+func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserIDResponse, error) {
 	user := model.User{
 		Email:           req.Email,
 		Name:            req.Name,
@@ -31,16 +31,17 @@ func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 	err := validate.Struct(user)
 	if err != nil {
 		s.Log.Error(err.Error())
-		return &pb.UserIDRequest{}, err
+		return &pb.UserIDResponse{}, err
 	}
 
 	userCreated, err := s.Controller.Create(ctx, user)
 	if err != nil {
 		s.Log.Error(err.Error())
-		return &pb.UserIDRequest{}, err
+		return &pb.UserIDResponse{}, err
 	}
 
-	return &pb.UserIDRequest{
-		Id: uint32(userCreated.ID),
+	return &pb.UserIDResponse{
+		Id:     uint32(userCreated.ID),
+		Status: 1,
 	}, nil
 }

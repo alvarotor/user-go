@@ -8,10 +8,10 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 service User {
-  rpc Create (UserRequest) returns (UserIDRequest) {}
+  rpc Create (UserRequest) returns (UserIDResponse) {}
   rpc Get (UserIDRequest) returns (UserResponse) {}
   rpc Update (UpdateUserRequest) returns (UserIDResponse) {}
-  rpc Delete (UserIDRequest) returns (UserIDResponse) {}
+  rpc Delete (UserDeleteRequest) returns (UserIDResponse) {}
   rpc List (google.protobuf.Empty) returns (ListUsersResponse) {}
   rpc Login (UserLoginRequest) returns (UserLoginResponse) {}
   rpc LogOut (UserIDRequest) returns (UserIDResponse) {}
@@ -39,6 +39,11 @@ message UserLoginRequest {
 
 message UserIDRequest {
   uint32 id = 1;
+}
+
+message UserDeleteRequest {
+  uint32 id = 1;
+  bool permanently = 2;
 }
 
 message UpdateUserRequest {
