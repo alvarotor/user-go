@@ -14,5 +14,5 @@ type IControllerUser interface {
 	LogOut(context.Context, string) (int, error)
 	Validate(context.Context, string) (int, model.Token, error)
 	GetByEmail(context.Context, string) (*model.User, error)
-	TokenToUser(c context.Context, token string) (int, model.User, error)
+	TokenToUser(context.Context, string) (*model.User, error)
 }

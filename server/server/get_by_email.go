@@ -10,7 +10,7 @@ import (
 
 func (s *UserServer) GetByEmail(ctx context.Context, req *pb.UserMailRequest) (*pb.UserResponse, error) {
 
-	user, err := s.Controller.GetByEmail(ctx, req.Email)
+	user, err := s.Controller.GetByEmail(ctx, req.GetEmail())
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserResponse{}, err

@@ -10,7 +10,7 @@ import (
 
 func (s *UserServer) Login(ctx context.Context, req *pb.UserLoginRequest) (*pb.UserLoginResponse, error) {
 	userLogin := dto.UserLogin{
-		Email: req.Email,
+		Email: req.GetEmail(),
 		Time:  uint(req.LoginLengthTime),
 	}
 

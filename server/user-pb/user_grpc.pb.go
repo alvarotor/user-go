@@ -20,15 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	User_Create_FullMethodName     = "/user_pb.User/Create"
-	User_Get_FullMethodName        = "/user_pb.User/Get"
-	User_Update_FullMethodName     = "/user_pb.User/Update"
-	User_Delete_FullMethodName     = "/user_pb.User/Delete"
-	User_List_FullMethodName       = "/user_pb.User/List"
-	User_Login_FullMethodName      = "/user_pb.User/Login"
-	User_LogOut_FullMethodName     = "/user_pb.User/LogOut"
-	User_Validate_FullMethodName   = "/user_pb.User/Validate"
-	User_GetByEmail_FullMethodName = "/user_pb.User/GetByEmail"
+	User_Create_FullMethodName      = "/user_pb.User/Create"
+	User_Get_FullMethodName         = "/user_pb.User/Get"
+	User_Update_FullMethodName      = "/user_pb.User/Update"
+	User_Delete_FullMethodName      = "/user_pb.User/Delete"
+	User_List_FullMethodName        = "/user_pb.User/List"
+	User_Login_FullMethodName       = "/user_pb.User/Login"
+	User_LogOut_FullMethodName      = "/user_pb.User/LogOut"
+	User_Validate_FullMethodName    = "/user_pb.User/Validate"
+	User_GetByEmail_FullMethodName  = "/user_pb.User/GetByEmail"
+	User_TokenToUser_FullMethodName = "/user_pb.User/TokenToUser"
 )
 
 // UserClient is the client API for User service.
@@ -44,6 +45,7 @@ type UserClient interface {
 	LogOut(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserIDResponse, error)
 	Validate(ctx context.Context, in *UserValidateRequest, opts ...grpc.CallOption) (*UserTokenResponse, error)
 	GetByEmail(ctx context.Context, in *UserMailRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	TokenToUser(ctx context.Context, in *UserTokenRequest, opts ...grpc.CallOption) (*UserResponse, error)
 }
 
 type userClient struct {
@@ -144,6 +146,16 @@ func (c *userClient) GetByEmail(ctx context.Context, in *UserMailRequest, opts .
 	return out, nil
 }
 
+func (c *userClient) TokenToUser(ctx context.Context, in *UserTokenRequest, opts ...grpc.CallOption) (*UserResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserResponse)
+	err := c.cc.Invoke(ctx, User_TokenToUser_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -157,6 +169,7 @@ type UserServer interface {
 	LogOut(context.Context, *UserIDRequest) (*UserIDResponse, error)
 	Validate(context.Context, *UserValidateRequest) (*UserTokenResponse, error)
 	GetByEmail(context.Context, *UserMailRequest) (*UserResponse, error)
+	TokenToUser(context.Context, *UserTokenRequest) (*UserResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -193,6 +206,9 @@ func (UnimplementedUserServer) Validate(context.Context, *UserValidateRequest) (
 }
 func (UnimplementedUserServer) GetByEmail(context.Context, *UserMailRequest) (*UserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetByEmail not implemented")
+}
+func (UnimplementedUserServer) TokenToUser(context.Context, *UserTokenRequest) (*UserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TokenToUser not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -377,6 +393,24 @@ func _User_GetByEmail_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_TokenToUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).TokenToUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_TokenToUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).TokenToUser(ctx, req.(*UserTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -419,6 +453,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetByEmail",
 			Handler:    _User_GetByEmail_Handler,
+		},
+		{
+			MethodName: "TokenToUser",
+			Handler:    _User_TokenToUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
