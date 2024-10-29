@@ -8,18 +8,12 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserStatusResponse, error) {
+func (s *UserServer) Update(ctx context.Context, req *pb.UserUpdateRequest) (*pb.UserStatusResponse, error) {
 
 	user := model.User{
-		Email:           req.User.Email,
-		Name:            req.User.Name,
-		Password:        req.User.Password,
-		ProfilePic:      req.User.ProfilePic,
-		LoginLengthTime: req.User.LoginLengthTime,
-		Admin:           req.User.Admin,
-		SuperAdmin:      req.User.SuperAdmin,
-		Code:            req.User.Code,
-		CodeExpire:      req.User.CodeExpire.AsTime(),
+		Email:      req.Email,
+		Name:       req.Name,
+		ProfilePic: req.ProfilePic,
 	}
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
@@ -29,13 +23,13 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UpdateUserRequest) (*pb
 		return &pb.UserStatusResponse{}, err
 	}
 
-	userID, err := s.Controller.GetByEmail(ctx, req.User.Email)
+	id, err := s.Controller.GetByEmail(ctx, req.Email)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserStatusResponse{}, err
 	}
 
-	err = s.Controller.Update(ctx, uint(userID.ID), user)
+	err = s.Controller.Update(ctx, uint(id.ID), user)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserStatusResponse{}, err

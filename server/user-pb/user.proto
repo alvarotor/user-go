@@ -10,7 +10,7 @@ import "google/protobuf/empty.proto";
 service User {
   rpc Create (UserRequest) returns (UserIDResponse) {}
   rpc Get (UserIDRequest) returns (UserResponse) {}
-  rpc Update (UpdateUserRequest) returns (UserStatusResponse) {}
+  rpc Update (UserUpdateRequest) returns (UserStatusResponse) {}
   rpc Delete (UserDeleteRequest) returns (UserIDResponse) {}
   rpc List (google.protobuf.Empty) returns (ListUsersResponse) {}
   rpc Login (UserLoginRequest) returns (UserLoginResponse) {}
@@ -56,8 +56,10 @@ message UserDeleteRequest {
   bool permanently = 2;
 }
 
-message UpdateUserRequest {
-  UserRequest user = 1;
+message UserUpdateRequest {
+  string email = 1;
+  string name = 2;
+  string profile_pic = 3;
 }
 
 message UserIDResponse {
