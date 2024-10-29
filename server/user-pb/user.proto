@@ -14,7 +14,7 @@ service User {
   rpc Delete (UserDeleteRequest) returns (UserIDResponse) {}
   rpc List (google.protobuf.Empty) returns (ListUsersResponse) {}
   rpc Login (UserLoginRequest) returns (UserLoginResponse) {}
-  rpc LogOut (UserIDRequest) returns (UserIDResponse) {}
+  rpc LogOut (UserMailRequest) returns (UserStatusResponse) {}
   rpc Validate (UserValidateRequest) returns (UserTokenResponse) {}
   rpc GetByEmail (UserMailRequest) returns (UserResponse) {}
   rpc TokenToUser (UserTokenRequest) returns (UserResponse) {}

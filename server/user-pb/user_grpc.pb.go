@@ -42,7 +42,7 @@ type UserClient interface {
 	Delete(ctx context.Context, in *UserDeleteRequest, opts ...grpc.CallOption) (*UserIDResponse, error)
 	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ListUsersResponse, error)
 	Login(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginResponse, error)
-	LogOut(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserIDResponse, error)
+	LogOut(ctx context.Context, in *UserMailRequest, opts ...grpc.CallOption) (*UserStatusResponse, error)
 	Validate(ctx context.Context, in *UserValidateRequest, opts ...grpc.CallOption) (*UserTokenResponse, error)
 	GetByEmail(ctx context.Context, in *UserMailRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	TokenToUser(ctx context.Context, in *UserTokenRequest, opts ...grpc.CallOption) (*UserResponse, error)
@@ -116,9 +116,9 @@ func (c *userClient) Login(ctx context.Context, in *UserLoginRequest, opts ...gr
 	return out, nil
 }
 
-func (c *userClient) LogOut(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserIDResponse, error) {
+func (c *userClient) LogOut(ctx context.Context, in *UserMailRequest, opts ...grpc.CallOption) (*UserStatusResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UserIDResponse)
+	out := new(UserStatusResponse)
 	err := c.cc.Invoke(ctx, User_LogOut_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -166,7 +166,7 @@ type UserServer interface {
 	Delete(context.Context, *UserDeleteRequest) (*UserIDResponse, error)
 	List(context.Context, *emptypb.Empty) (*ListUsersResponse, error)
 	Login(context.Context, *UserLoginRequest) (*UserLoginResponse, error)
-	LogOut(context.Context, *UserIDRequest) (*UserIDResponse, error)
+	LogOut(context.Context, *UserMailRequest) (*UserStatusResponse, error)
 	Validate(context.Context, *UserValidateRequest) (*UserTokenResponse, error)
 	GetByEmail(context.Context, *UserMailRequest) (*UserResponse, error)
 	TokenToUser(context.Context, *UserTokenRequest) (*UserResponse, error)
@@ -198,7 +198,7 @@ func (UnimplementedUserServer) List(context.Context, *emptypb.Empty) (*ListUsers
 func (UnimplementedUserServer) Login(context.Context, *UserLoginRequest) (*UserLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedUserServer) LogOut(context.Context, *UserIDRequest) (*UserIDResponse, error) {
+func (UnimplementedUserServer) LogOut(context.Context, *UserMailRequest) (*UserStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LogOut not implemented")
 }
 func (UnimplementedUserServer) Validate(context.Context, *UserValidateRequest) (*UserTokenResponse, error) {
@@ -340,7 +340,7 @@ func _User_Login_Handler(srv interface{}, ctx context.Context, dec func(interfac
 }
 
 func _User_LogOut_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserIDRequest)
+	in := new(UserMailRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -352,7 +352,7 @@ func _User_LogOut_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: User_LogOut_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).LogOut(ctx, req.(*UserIDRequest))
+		return srv.(UserServer).LogOut(ctx, req.(*UserMailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
