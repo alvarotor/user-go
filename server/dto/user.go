@@ -15,3 +15,8 @@ type UserLogin struct {
 	Email string `json:"email" validate:"email,required"`
 	Time  uint   `json:"time" validate:"required,gt=0,lt=366"`
 }
+
+type UserUpdate struct {
+	Name       string `validate:"required"`
+	ProfilePic string
+}
