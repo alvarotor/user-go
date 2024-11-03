@@ -8,15 +8,15 @@ import (
 
 type User struct {
 	gorm.Model
-	Email           string `gorm:"unique;not null" json:"email" validate:"email,required"`
-	Password        string `gorm:"not null" json:"password,omitempty" validate:"required"`
-	Name            string `gorm:"not null" json:"name" validate:"required"`
-	ProfilePic      string `gorm:"not null" json:"profile_pic"`
-	LoginLengthTime uint32 `json:"-" validate:"number"`
+	Email           string `gorm:"unique;not null" validate:"email,required"`
+	Password        string `gorm:"not null" validate:"required"`
+	Name            string `gorm:"not null" validate:"required"`
+	ProfilePic      string `gorm:"not null"`
+	LoginLengthTime uint32 `validate:"number"`
 	// server data
-	Admin      bool      `gorm:"not null;default:false" json:"-"`
-	SuperAdmin bool      `gorm:"not null;default:false" json:"-"`
-	Validated  bool      `gorm:"not null;default:false" json:"validated" validate:"boolean"`
-	Code       string    `json:"-"`
-	CodeExpire time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"-"`
+	Admin      bool `gorm:"not null;default:false"`
+	SuperAdmin bool `gorm:"not null;default:false"`
+	Validated  bool `gorm:"not null;default:false" validate:"boolean"`
+	Code       string
+	CodeExpire time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 }

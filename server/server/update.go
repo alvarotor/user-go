@@ -34,7 +34,6 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UserUpdateRequest) (*pb
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserStatusResponse{}, err
-
 	}
 
 	return &pb.UserStatusResponse{

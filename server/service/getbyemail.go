@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 
+	"github.com/alvarotor/entitier-go/models"
 	"github.com/alvarotor/user-go/server/model"
 )
 
@@ -17,5 +18,5 @@ func (s userService) GetByEmailSvc(ctx context.Context, email string) (*model.Us
 		}
 	}
 
-	return nil, model.ErrUserNotFound
+	return nil, models.ErrNotFound
 }

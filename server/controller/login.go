@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/alvarotor/entitier-go/models"
 	"github.com/alvarotor/user-go/server/dto"
 	"github.com/alvarotor/user-go/server/model"
 	"golang.org/x/exp/rand"
@@ -13,9 +14,9 @@ import (
 
 func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int, string, error) {
 	user, err := u.GetByEmail(c, userLogin.Email)
-	if err != nil && err.Error() != "user not found" {
+	if !errors.Is(err, models.ErrNotFound) {
 		u.log.Error(err.Error())
-		return http.StatusInternalServerError, "", err
+		return http.StatusNotFound, "", err
 	}
 
 	tenMinutes := time.Now().UTC().Add(10 * time.Minute)
