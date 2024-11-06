@@ -30,8 +30,8 @@ jobs:
       with:
         push: true
         tags: |
-          ghcr.io/alvarotor/user-go:user-go-latest
-          ghcr.io/alvarotor/user-go:user-go-${{ env.TAG }}
+          ghcr.io/alvarotor/user-go:dev-latest
+          ghcr.io/alvarotor/user-go:dev-${{ env.TAG }}
 
     - name: REST API to update container
       run: |
