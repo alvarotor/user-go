@@ -9,7 +9,7 @@ import (
 )
 
 func checkEnvVarsConf(conf *model.Config) {
-	checkEnvVar("PROJECT_PORT")
+	checkEnvVar("PROJECT_PORT_USER")
 	checkEnvVar("POSTGRES_HOST")
 	checkEnvVar("POSTGRES_DB")
 	checkEnvVar("POSTGRES_USER")
@@ -20,11 +20,11 @@ func checkEnvVarsConf(conf *model.Config) {
 	checkEnvVar("Issuer")
 	checkEnvVar("JWT_KEY")
 
-	project_port, err := strconv.Atoi(os.Getenv("PROJECT_PORT"))
+	project_port, err := strconv.Atoi(os.Getenv("PROJECT_PORT_USER"))
 	if err != nil {
-		log.Fatalf(`Missing PROJECT_PORT env var`)
+		log.Fatalf(`Missing PROJECT_PORT_USER env var`)
 	}
-	conf.PROJECT_PORT = project_port
+	conf.PROJECT_PORT_USER = project_port
 	conf.POSTGRES_HOST = os.Getenv("POSTGRES_HOST")
 	conf.POSTGRES_DB = os.Getenv("POSTGRES_DB")
 	conf.POSTGRES_USER = os.Getenv("POSTGRES_USER")

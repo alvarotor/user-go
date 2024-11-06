@@ -43,7 +43,7 @@ func main() {
 		Log:        l,
 	}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", conf.PROJECT_PORT))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", conf.PROJECT_PORT_USER))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

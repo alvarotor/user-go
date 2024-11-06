@@ -3,7 +3,7 @@ package model
 import "os"
 
 type Config struct {
-	PROJECT_PORT               int    `validate:"required"`
+	PROJECT_PORT_USER          int    `validate:"required"`
 	POSTGRES_HOST              string `validate:"required"`
 	POSTGRES_PORT              string `validate:"required"`
 	POSTGRES_USER              string `validate:"required"`
