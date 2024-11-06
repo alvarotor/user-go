@@ -21,6 +21,6 @@ RUN chmod +x /bin/grpc_health_probe
 FROM alpine:3.20.3 AS build-release-stage
 RUN apk update && apk upgrade && apk add --no-cache curl && rm -rf /var/cache/apk/*
 COPY --from=build-stage /server /server
-COPY --from=grpc-probe-stage /bin/grpc_health_probe /bin/grpc_health_probe
+COPY --from=grpc-probe-stage /bin/grpc_health_probe /usr/bin/grpc_health_probe
 
 ENTRYPOINT ["/server"]
