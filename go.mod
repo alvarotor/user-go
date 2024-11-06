@@ -3,8 +3,8 @@ module github.com/alvarotor/user-go
 go 1.23.2
 
 require (
-	github.com/alvarotor/entitier-go v0.0.0-20241021204048-39348077c81c
-	github.com/go-playground/validator/v10 v10.20.0
+	github.com/alvarotor/entitier-go v0.0.0-20241104231310-8e11f9c07d27
+	github.com/go-playground/validator/v10 v10.22.1
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/joho/godotenv v1.5.1
 	golang.org/x/exp v0.0.0-20241009180824-f66d83c29e7c
