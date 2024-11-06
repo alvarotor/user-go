@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"net"
 	"os"
+	"time"
 
 	"google.golang.org/grpc"
 
@@ -16,6 +17,15 @@ import (
 	"github.com/alvarotor/user-go/server/service"
 	pb "github.com/alvarotor/user-go/server/user-pb"
 	"github.com/joho/godotenv"
+	"google.golang.org/grpc/health"
+	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
+	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+)
+
+var (
+	sleep = time.Second * 5
+
+	system = "system is helthy"
 )
 
 func main() {
@@ -49,7 +59,27 @@ func main() {
 	}
 
 	s := grpc.NewServer()
+	healthcheck := health.NewServer()
+	healthgrpc.RegisterHealthServer(s, healthcheck)
 	pb.RegisterUserServer(s, &userServer)
+
+	go func() {
+		// asynchronously inspect dependencies and toggle serving status as needed
+		next := healthpb.HealthCheckResponse_SERVING
+
+		for {
+			healthcheck.SetServingStatus(system, next)
+
+			if next == healthpb.HealthCheckResponse_SERVING {
+				next = healthpb.HealthCheckResponse_NOT_SERVING
+			} else {
+				next = healthpb.HealthCheckResponse_SERVING
+			}
+
+			time.Sleep(sleep)
+		}
+	}()
+
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
