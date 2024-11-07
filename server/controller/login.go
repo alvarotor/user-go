@@ -15,8 +15,10 @@ import (
 func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int, string, error) {
 	user, err := u.GetByEmail(c, userLogin.Email)
 	if !errors.Is(err, models.ErrNotFound) {
-		u.log.Error(err.Error())
-		return http.StatusNotFound, "", err
+		if err != nil {
+			u.log.Error(err.Error())
+			return http.StatusNotFound, "", err
+		}
 	}
 
 	tenMinutes := time.Now().UTC().Add(10 * time.Minute)
