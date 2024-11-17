@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"log"
+	"time"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	"github.com/alvarotor/user-go/client/health"
 	pb "github.com/alvarotor/user-go/server/user-pb"
 )
 
@@ -35,4 +37,18 @@ func main() {
 	log.Printf("Created user with ID: %d", r.Id)
 
 	// Implement other operations (Get, Update, Delete, List) as needed
+
+	// Add this to the main function after the addr declaration
+	healthChecker, err := health.NewHealthChecker(addr)
+	if err != nil {
+		log.Fatalf("Failed to create health checker: %v", err)
+	}
+	defer healthChecker.Close()
+
+	// Check server health
+	if err := healthChecker.Check(5 * time.Second); err != nil {
+		log.Printf("Server health check failed: %v", err)
+	} else {
+		log.Println("Server is healthy")
+	}
 }

@@ -63,22 +63,8 @@ func main() {
 	healthgrpc.RegisterHealthServer(s, healthcheck)
 	pb.RegisterUserServer(s, &userServer)
 
-	go func() {
-		// asynchronously inspect dependencies and toggle serving status as needed
-		next := healthpb.HealthCheckResponse_SERVING
-
-		for {
-			healthcheck.SetServingStatus(system, next)
-
-			if next == healthpb.HealthCheckResponse_SERVING {
-				next = healthpb.HealthCheckResponse_NOT_SERVING
-			} else {
-				next = healthpb.HealthCheckResponse_SERVING
-			}
-
-			time.Sleep(sleep)
-		}
-	}()
+	// Set the service as healthy
+	healthcheck.SetServingStatus("system", healthpb.HealthCheckResponse_SERVING)
 
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
