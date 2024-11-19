@@ -6,7 +6,6 @@ import (
 	"log/slog"
 	"net"
 	"os"
-	"time"
 
 	"google.golang.org/grpc"
 
@@ -20,11 +19,6 @@ import (
 	"google.golang.org/grpc/health"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
-)
-
-var (
-	sleep  = time.Second * 5
-	system = "system is helthy"
 )
 
 func main() {
