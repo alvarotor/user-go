@@ -23,8 +23,7 @@ import (
 )
 
 var (
-	sleep = time.Second * 5
-
+	sleep  = time.Second * 5
 	system = "system is helthy"
 )
 
