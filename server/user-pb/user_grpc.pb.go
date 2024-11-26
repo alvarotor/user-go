@@ -30,6 +30,7 @@ const (
 	User_Validate_FullMethodName    = "/user_pb.User/Validate"
 	User_GetByEmail_FullMethodName  = "/user_pb.User/GetByEmail"
 	User_TokenToUser_FullMethodName = "/user_pb.User/TokenToUser"
+	User_Health_FullMethodName      = "/user_pb.User/Health"
 )
 
 // UserClient is the client API for User service.
@@ -46,6 +47,7 @@ type UserClient interface {
 	Validate(ctx context.Context, in *UserValidateRequest, opts ...grpc.CallOption) (*UserTokenResponse, error)
 	GetByEmail(ctx context.Context, in *UserMailRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	TokenToUser(ctx context.Context, in *UserTokenRequest, opts ...grpc.CallOption) (*UserResponse, error)
+	Health(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserStatusResponse, error)
 }
 
 type userClient struct {
@@ -156,6 +158,16 @@ func (c *userClient) TokenToUser(ctx context.Context, in *UserTokenRequest, opts
 	return out, nil
 }
 
+func (c *userClient) Health(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserStatusResponse)
+	err := c.cc.Invoke(ctx, User_Health_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility.
@@ -170,6 +182,7 @@ type UserServer interface {
 	Validate(context.Context, *UserValidateRequest) (*UserTokenResponse, error)
 	GetByEmail(context.Context, *UserMailRequest) (*UserResponse, error)
 	TokenToUser(context.Context, *UserTokenRequest) (*UserResponse, error)
+	Health(context.Context, *UserIDRequest) (*UserStatusResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -209,6 +222,9 @@ func (UnimplementedUserServer) GetByEmail(context.Context, *UserMailRequest) (*U
 }
 func (UnimplementedUserServer) TokenToUser(context.Context, *UserTokenRequest) (*UserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TokenToUser not implemented")
+}
+func (UnimplementedUserServer) Health(context.Context, *UserIDRequest) (*UserStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Health not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 func (UnimplementedUserServer) testEmbeddedByValue()              {}
@@ -411,6 +427,24 @@ func _User_TokenToUser_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_Health_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).Health(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_Health_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).Health(ctx, req.(*UserIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -457,6 +491,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TokenToUser",
 			Handler:    _User_TokenToUser_Handler,
+		},
+		{
+			MethodName: "Health",
+			Handler:    _User_Health_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

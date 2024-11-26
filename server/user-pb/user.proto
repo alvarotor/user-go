@@ -18,6 +18,7 @@ service User {
   rpc Validate (UserValidateRequest) returns (UserTokenResponse) {}
   rpc GetByEmail (UserMailRequest) returns (UserResponse) {}
   rpc TokenToUser (UserTokenRequest) returns (UserResponse) {}
+  rpc Health (UserIDRequest) returns (UserStatusResponse) {}
 }
 
 message UserRequest {
