@@ -137,6 +137,7 @@ The service includes a gRPC health checking mechanism that allows clients to mon
 ### Using the Health Check
 
 The health check provides a simple way to verify if the server is running and ready to handle requests. This can be useful for:
+
 - Load balancers to determine service availability
 - Monitoring systems to track service health
 - Client applications to check server status before making requests

@@ -17,6 +17,8 @@ func (s *UserServer) Health(ctx context.Context, req *pb.UserIDRequest) (*pb.Use
 		return &pb.UserStatusResponse{}, errors.New(errMsg)
 	}
 
+	s.Log.Info("Healthy")
+
 	return &pb.UserStatusResponse{
 		Status: http.StatusOK,
 	}, nil
