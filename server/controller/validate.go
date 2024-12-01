@@ -14,19 +14,19 @@ import (
 func (u *controllerUser) Validate(c context.Context, code string) (int, model.Token, error) {
 	user, err := u.GetByCode(c, code)
 	if err != nil {
-		u.log.Info(err.Error())
+		u.log.Error(err.Error())
 		return http.StatusNotFound, model.Token{}, err
 	}
 
 	if user == nil {
 		errMsg := "code is invalid"
-		u.log.Info(errMsg)
+		u.log.Error(errMsg)
 		return http.StatusBadRequest, model.Token{}, errors.New(errMsg)
 	}
 
 	if user.CodeExpire.Before(time.Now().UTC()) {
 		errMsg := "code is expired"
-		u.log.Info(errMsg)
+		u.log.Error(errMsg)
 		return http.StatusBadRequest, model.Token{}, errors.New(errMsg)
 	}
 
