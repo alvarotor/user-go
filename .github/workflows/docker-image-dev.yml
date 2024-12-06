@@ -32,7 +32,3 @@ jobs:
         tags: |
           ghcr.io/alvarotor/user-go:dev-latest
           ghcr.io/alvarotor/user-go:dev-${{ env.TAG }}
-
-    - name: REST API to update container
-      run: |
-        curl -H "Authorization: Bearer ${{ secrets.WATCHTOWER_TOKEN }}" https://watchtower.eplaceheritage.com/v1/update?image=ghcr.io/alvarotor/user-go,dev-latest --max-time 30

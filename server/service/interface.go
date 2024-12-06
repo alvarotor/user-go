@@ -9,7 +9,7 @@ import (
 
 type IUserService interface {
 	repository.IGenericRepo[model.User, uint]
-	GetByEmailSvc(context.Context, string) (*model.User, error)
+	GetByEmail(context.Context, string) (*model.User, error)
 	GetByCode(context.Context, string) (*model.User, error)
 	ValidateSvc(context.Context, string) error
 	LogOutSvc(context.Context, string) error

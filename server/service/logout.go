@@ -6,7 +6,7 @@ import (
 )
 
 func (s *userService) LogOutSvc(ctx context.Context, email string) error {
-	user, err := s.GetByEmailSvc(ctx, email)
+	user, err := s.GetByEmail(ctx, email)
 	if err != nil {
 		return err
 	}

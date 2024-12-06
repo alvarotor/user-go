@@ -13,7 +13,7 @@ import (
 )
 
 func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int, string, error) {
-	user, err := u.GetByEmail(c, userLogin.Email)
+	user, err := u.IUserService.GetByEmail(c, userLogin.Email)
 	if !errors.Is(err, models.ErrNotFound) {
 		if err != nil {
 			u.log.Error(err.Error())

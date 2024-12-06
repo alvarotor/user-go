@@ -7,7 +7,7 @@ import (
 	"github.com/alvarotor/user-go/server/model"
 )
 
-func (s userService) GetByEmailSvc(ctx context.Context, email string) (*model.User, error) {
+func (s userService) GetByEmail(ctx context.Context, email string) (*model.User, error) {
 	users, err := s.GetAll(ctx)
 	if err != nil {
 		return nil, err

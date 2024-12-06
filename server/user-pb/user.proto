@@ -11,7 +11,7 @@ service User {
   rpc Create (UserRequest) returns (UserIDResponse) {}
   rpc Get (UserIDRequest) returns (UserResponse) {}
   rpc Update (UserUpdateRequest) returns (UserStatusResponse) {}
-  rpc Delete (UserDeleteRequest) returns (UserIDResponse) {}
+  rpc Delete (UserDeleteRequest) returns (UserStatusResponse) {}
   rpc List (google.protobuf.Empty) returns (ListUsersResponse) {}
   rpc Login (UserLoginRequest) returns (UserLoginResponse) {}
   rpc LogOut (UserMailRequest) returns (UserStatusResponse) {}
@@ -53,7 +53,7 @@ message UserIDRequest {
 }
 
 message UserDeleteRequest {
-  uint32 id = 1;
+  string email = 1;
   bool permanently = 2;
 }
 

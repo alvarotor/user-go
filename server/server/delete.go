@@ -2,20 +2,34 @@ package server
 
 import (
 	"context"
+	"errors"
 
 	pb "github.com/alvarotor/user-go/server/user-pb"
 )
 
-func (s *UserServer) Delete(ctx context.Context, req *pb.UserDeleteRequest) (*pb.UserIDResponse, error) {
+func (s *UserServer) Delete(ctx context.Context, req *pb.UserDeleteRequest) (*pb.UserStatusResponse, error) {
 
-	err := s.Controller.Delete(ctx, uint(req.Id), req.Permanently)
-	if err != nil {
-		s.Log.Error(err.Error())
-		return &pb.UserIDResponse{}, err
+	if req.GetEmail() == "" {
+		s.Log.Error("email is required")
+		return &pb.UserStatusResponse{}, errors.New("email is required")
 	}
 
-	return &pb.UserIDResponse{
-		Id:     uint32(req.Id),
+	userMailRequest := pb.UserMailRequest{
+		Email: req.GetEmail(),
+	}
+	user, err := s.GetIDByEmail(ctx, &userMailRequest)
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.UserStatusResponse{}, err
+	}
+
+	err = s.Controller.Delete(ctx, uint(user.GetId()), req.Permanently)
+	if err != nil {
+		s.Log.Error(err.Error())
+		return &pb.UserStatusResponse{}, err
+	}
+
+	return &pb.UserStatusResponse{
 		Status: 1,
 	}, nil
 }
