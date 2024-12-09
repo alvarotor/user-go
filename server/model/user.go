@@ -19,4 +19,5 @@ type User struct {
 	Validated  bool `gorm:"not null;default:false" validate:"boolean"`
 	Code       string
 	CodeExpire time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+	Bucket     string
 }

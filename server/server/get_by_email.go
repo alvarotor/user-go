@@ -26,5 +26,6 @@ func (s *UserServer) GetByEmail(ctx context.Context, req *pb.UserMailRequest) (*
 		LoginLengthTime: user.LoginLengthTime,
 		Code:            user.Code,
 		CodeExpire:      timestamppb.New(user.CodeExpire),
+		Bucket:          user.Bucket,
 	}, nil
 }

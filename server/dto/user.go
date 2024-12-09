@@ -19,4 +19,5 @@ type UserLogin struct {
 type UserUpdate struct {
 	Name       string `validate:"required"`
 	ProfilePic string
+	Bucket     string
 }

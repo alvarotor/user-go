@@ -61,6 +61,7 @@ message UserUpdateRequest {
   string email = 1;
   string name = 2;
   string profile_pic = 3;
+  string bucket = 4;
 }
 
 message UserIDResponse {
@@ -86,6 +87,7 @@ message UserResponse {
   bool super_admin = 8;
   string code = 9;
   google.protobuf.Timestamp code_expire = 10;
+  string bucket = 11;
 }
 
 message UserValidateRequest {

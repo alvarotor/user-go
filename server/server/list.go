@@ -29,6 +29,7 @@ func (s *UserServer) List(ctx context.Context, _ *emptypb.Empty) (*pb.ListUsersR
 			LoginLengthTime: user.LoginLengthTime,
 			Code:            user.Code,
 			CodeExpire:      timestamppb.New(user.CodeExpire),
+			Bucket:          user.Bucket,
 		}
 		pbUsers = append(pbUsers, &pbUser)
 	}

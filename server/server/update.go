@@ -13,6 +13,7 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UserUpdateRequest) (*pb
 	user := dto.UserUpdate{
 		Name:       req.Name,
 		ProfilePic: req.ProfilePic,
+		Bucket:     req.Bucket,
 	}
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
