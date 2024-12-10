@@ -1,0 +1,18 @@
+package server
+
+import (
+	"context"
+
+	pb "github.com/alvarotor/user-go/server/user-pb"
+)
+
+func (s *UserServer) UpdateUserAdminStatus(ctx context.Context, req *pb.UpdateUserAdminRequest) (*pb.UserStatusResponse, error) {
+	err := s.Controller.UpdateUserAdminStatus(ctx, req.Email, req.Admin)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UserStatusResponse{
+		Status: 1,
+	}, nil
+}

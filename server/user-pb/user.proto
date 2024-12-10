@@ -19,6 +19,7 @@ service User {
   rpc GetByEmail (UserMailRequest) returns (UserResponse) {}
   rpc TokenToUser (UserTokenRequest) returns (UserResponse) {}
   rpc Health (UserIDRequest) returns (UserStatusResponse) {}
+  rpc UpdateUserAdminStatus (UpdateUserAdminRequest) returns (UserStatusResponse) {}
 }
 
 message UserRequest {
@@ -105,4 +106,9 @@ message UserTokenResponse {
   google.protobuf.Timestamp expires = 3;
   string email = 4;
   uint32 status = 5;
+}
+
+message UpdateUserAdminRequest {
+  string email = 1;
+  bool admin = 2;
 }

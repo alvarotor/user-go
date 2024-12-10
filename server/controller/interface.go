@@ -15,4 +15,5 @@ type IControllerUser interface {
 	Validate(context.Context, string) (int, model.Token, error)
 	TokenToUser(context.Context, string) (*model.User, error)
 	Health(context.Context, uint32) int
+	UpdateUserAdminStatus(context.Context, string, bool) error
 }
