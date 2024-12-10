@@ -7,13 +7,7 @@ import (
 )
 
 func (s *UserServer) LogOut(ctx context.Context, req *pb.UserMailRequest) (*pb.UserStatusResponse, error) {
-	user, err := s.Controller.GetByEmail(ctx, req.GetEmail())
-	if err != nil {
-		s.Log.Error(err.Error())
-		return &pb.UserStatusResponse{}, err
-	}
-	email := user.Email
-	status, err := s.Controller.LogOut(ctx, email)
+	status, err := s.Controller.LogOut(ctx, req.GetEmail())
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserStatusResponse{}, err

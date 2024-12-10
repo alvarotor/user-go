@@ -9,7 +9,6 @@ import (
 )
 
 func (s *UserServer) Update(ctx context.Context, req *pb.UserUpdateRequest) (*pb.UserStatusResponse, error) {
-
 	user := dto.UserUpdate{
 		Name:       req.Name,
 		ProfilePic: req.ProfilePic,
