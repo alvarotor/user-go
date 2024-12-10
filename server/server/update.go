@@ -31,6 +31,7 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UserUpdateRequest) (*pb
 
 	userID.Name = user.Name
 	userID.ProfilePic = user.ProfilePic
+	userID.Bucket = user.Bucket
 	err = s.Controller.Update(ctx, uint(userID.ID), *userID)
 	if err != nil {
 		s.Log.Error(err.Error())
