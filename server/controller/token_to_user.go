@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"errors"
-	"strings"
 
 	"github.com/alvarotor/user-go/server/dto"
 	"github.com/alvarotor/user-go/server/model"
@@ -41,7 +40,7 @@ func (u *controllerUser) TokenToUser(c context.Context, token string) (*model.Us
 	if err != nil {
 		return &model.User{}, err
 	}
-	if strings.TrimSpace(user.Code) == "" {
+	if user.Code == "OUT" {
 		errMsg := "user not logged"
 		u.log.Error(errMsg)
 		return &model.User{}, err

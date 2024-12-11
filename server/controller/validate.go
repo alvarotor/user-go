@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/alvarotor/user-go/server/dto"
@@ -25,7 +24,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, model.To
 		return http.StatusBadRequest, model.Token{}, errors.New(errMsg)
 	}
 
-	if strings.TrimSpace(user.Code) == "" {
+	if user.Code == "OUT" {
 		errMsg := "code is invalid"
 		u.log.Error(errMsg)
 		return http.StatusBadRequest, model.Token{}, errors.New(errMsg)
