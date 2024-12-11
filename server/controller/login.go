@@ -6,15 +6,15 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/alvarotor/entitier-go/models"
+	entModels "github.com/alvarotor/entitier-go/models"
 	"github.com/alvarotor/user-go/server/dto"
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 	"golang.org/x/exp/rand"
 )
 
 func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int, string, error) {
 	user, err := u.IUserService.GetByEmail(c, userLogin.Email)
-	if !errors.Is(err, models.ErrNotFound) {
+	if !errors.Is(err, entModels.ErrNotFound) {
 		if err != nil {
 			u.log.Error(err.Error())
 			return http.StatusNotFound, "", err
@@ -25,7 +25,7 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 
 	if user == nil {
 
-		user = new(model.User)
+		user = new(models.User)
 		user.Email = userLogin.Email
 		user.LoginLengthTime = uint32(userLogin.Time)
 		user.Code = u.generateRandomString(u.conf.SizeRandomStringValidation)

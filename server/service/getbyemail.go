@@ -3,11 +3,11 @@ package service
 import (
 	"context"
 
-	"github.com/alvarotor/entitier-go/models"
-	"github.com/alvarotor/user-go/server/model"
+	entModels "github.com/alvarotor/entitier-go/models"
+	"github.com/alvarotor/user-go/server/models"
 )
 
-func (s userService) GetByEmail(ctx context.Context, email string) (*model.User, error) {
+func (s userService) GetByEmail(ctx context.Context, email string) (*models.User, error) {
 	users, err := s.GetAll(ctx)
 	if err != nil {
 		return nil, err
@@ -18,5 +18,5 @@ func (s userService) GetByEmail(ctx context.Context, email string) (*model.User,
 		}
 	}
 
-	return nil, models.ErrNotFound
+	return nil, entModels.ErrNotFound
 }

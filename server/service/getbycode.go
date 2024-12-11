@@ -5,10 +5,10 @@ import (
 	"errors"
 	"time"
 
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 )
 
-func (s userService) GetByCode(ctx context.Context, code string) (*model.User, error) {
+func (s userService) GetByCode(ctx context.Context, code string) (*models.User, error) {
 	users, err := s.GetAll(ctx)
 	if err != nil {
 		return nil, err
@@ -22,5 +22,5 @@ func (s userService) GetByCode(ctx context.Context, code string) (*model.User, e
 		}
 	}
 
-	return nil, model.ErrUserNotFound
+	return nil, models.ErrUserNotFound
 }

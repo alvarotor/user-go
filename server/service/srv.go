@@ -2,18 +2,18 @@ package service
 
 import (
 	"github.com/alvarotor/entitier-go/repository"
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 	"gorm.io/gorm"
 )
 
 type userService struct {
-	repository.IGenericRepo[model.User, uint]
+	repository.IGenericRepo[models.User, uint]
 }
 
 func NewUserService(
 	db *gorm.DB,
 ) IUserService {
-	repo := repository.NewGenericRepository[model.User, uint](db)
+	repo := repository.NewGenericRepository[models.User, uint](db)
 	return &userService{
 		IGenericRepo: repo,
 	}

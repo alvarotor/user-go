@@ -11,7 +11,7 @@ import (
 
 	"github.com/alvarotor/user-go/server/controller"
 	"github.com/alvarotor/user-go/server/db"
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 	"github.com/alvarotor/user-go/server/server"
 	"github.com/alvarotor/user-go/server/service"
 	pb "github.com/alvarotor/user-go/server/user-pb"
@@ -22,7 +22,7 @@ import (
 )
 
 func main() {
-	var conf model.Config
+	var conf models.Config
 
 	if conf.IsLocalENV() {
 		err := godotenv.Load()

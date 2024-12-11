@@ -3,17 +3,17 @@ package controller
 import (
 	"log/slog"
 
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 	"github.com/alvarotor/user-go/server/service"
 )
 
 type controllerUser struct {
 	service.IUserService
 	log  *slog.Logger
-	conf *model.Config
+	conf *models.Config
 }
 
-func NewUserController(log *slog.Logger, svc service.IUserService, conf *model.Config) IControllerUser {
+func NewUserController(log *slog.Logger, svc service.IUserService, conf *models.Config) IControllerUser {
 	return &controllerUser{
 		IUserService: svc,
 		log:          log,

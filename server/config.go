@@ -5,10 +5,10 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 )
 
-func checkEnvVarsConf(conf *model.Config) {
+func checkEnvVarsConf(conf *models.Config) {
 	checkEnvVar("PROJECT_PORT_USER")
 	checkEnvVar("POSTGRES_HOST")
 	checkEnvVar("POSTGRES_DB")

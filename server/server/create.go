@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 	pb "github.com/alvarotor/user-go/server/user-pb"
 	"github.com/go-playground/validator/v10"
 )
 
 func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserIDResponse, error) {
-	user := model.User{
+	user := models.User{
 		Email:           req.Email,
 		Name:            req.Name,
 		Password:        req.Password,

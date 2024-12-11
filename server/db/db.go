@@ -5,12 +5,12 @@ import (
 	"log"
 	"log/slog"
 
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func GetDB_PG(cfg *model.Config, l *slog.Logger) *gorm.DB {
+func GetDB_PG(cfg *models.Config, l *slog.Logger) *gorm.DB {
 
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		cfg.POSTGRES_HOST, cfg.POSTGRES_PORT, cfg.POSTGRES_USER, cfg.POSTGRES_PASSWORD, cfg.POSTGRES_DB)
@@ -25,7 +25,7 @@ func GetDB_PG(cfg *model.Config, l *slog.Logger) *gorm.DB {
 
 	l.Info("DB PostGres Connection established!")
 
-	if err = db.AutoMigrate(&model.User{}); err != nil {
+	if err = db.AutoMigrate(&models.User{}); err != nil {
 		log.Fatal("failed to AutoMigrate database PostGres")
 		// &&
 		// db.Migrator().HasTable(&model.User{}) {

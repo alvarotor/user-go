@@ -7,40 +7,40 @@ import (
 	"time"
 
 	"github.com/alvarotor/user-go/server/dto"
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func (u *controllerUser) Validate(c context.Context, code string) (int, model.Token, error) {
+func (u *controllerUser) Validate(c context.Context, code string) (int, models.Token, error) {
 	user, err := u.GetByCode(c, code)
 	if err != nil {
 		u.log.Error(err.Error())
-		return http.StatusNotFound, model.Token{}, err
+		return http.StatusNotFound, models.Token{}, err
 	}
 
 	if user == nil {
 		errMsg := "code is invalid"
 		u.log.Error(errMsg)
-		return http.StatusBadRequest, model.Token{}, errors.New(errMsg)
+		return http.StatusBadRequest, models.Token{}, errors.New(errMsg)
 	}
 
 	if user.Code == "OUT" {
 		errMsg := "code is invalid"
 		u.log.Error(errMsg)
-		return http.StatusBadRequest, model.Token{}, errors.New(errMsg)
+		return http.StatusBadRequest, models.Token{}, errors.New(errMsg)
 	}
 
 	if user.CodeExpire.Before(time.Now().UTC()) {
 		errMsg := "code is expired"
 		u.log.Error(errMsg)
-		return http.StatusBadRequest, model.Token{}, errors.New(errMsg)
+		return http.StatusBadRequest, models.Token{}, errors.New(errMsg)
 	}
 
 	if !user.Validated {
 		err = u.ValidateSvc(c, user.Email)
 		if err != nil {
 			u.log.Error(err.Error())
-			return http.StatusInternalServerError, model.Token{}, err
+			return http.StatusInternalServerError, models.Token{}, err
 		}
 	}
 
@@ -59,10 +59,10 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, model.To
 	tokenString, err := token.SignedString(u.conf.JWTKey)
 	if err != nil {
 		u.log.Error(err.Error())
-		return http.StatusInternalServerError, model.Token{}, err
+		return http.StatusInternalServerError, models.Token{}, err
 	}
 
-	model := model.Token{
+	model := models.Token{
 		Name:    "token",
 		Value:   tokenString,
 		Expires: expirationTime,

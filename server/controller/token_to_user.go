@@ -5,11 +5,11 @@ import (
 	"errors"
 
 	"github.com/alvarotor/user-go/server/dto"
-	"github.com/alvarotor/user-go/server/model"
+	"github.com/alvarotor/user-go/server/models"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func (u *controllerUser) TokenToUser(c context.Context, token string) (*model.User, error) {
+func (u *controllerUser) TokenToUser(c context.Context, token string) (*models.User, error) {
 
 	claims := &dto.ClaimsResponse{}
 
@@ -19,37 +19,37 @@ func (u *controllerUser) TokenToUser(c context.Context, token string) (*model.Us
 	if errors.Is(err, jwt.ErrSignatureInvalid) {
 		errMsg := "invalid signature token"
 		u.log.Error(errMsg)
-		return &model.User{}, errors.New(errMsg)
+		return &models.User{}, errors.New(errMsg)
 	}
 	if errors.Is(err, jwt.ErrTokenExpired) {
 		errMsg := "invalid signature token"
 		u.log.Error(errMsg)
-		return &model.User{}, errors.New(errMsg)
+		return &models.User{}, errors.New(errMsg)
 	}
 	if err != nil {
 		errMsg := "error parsing token"
 		u.log.Error(errMsg)
-		return &model.User{}, errors.New(errMsg)
+		return &models.User{}, errors.New(errMsg)
 	}
 	if !tkn.Valid {
 		errMsg := "invalid token"
 		u.log.Error(errMsg)
-		return &model.User{}, errors.New(errMsg)
+		return &models.User{}, errors.New(errMsg)
 	}
 	user, err := u.GetByEmail(c, claims.Email)
 	if err != nil {
-		return &model.User{}, err
+		return &models.User{}, err
 	}
 	if user.Code == "OUT" {
 		errMsg := "user not logged"
 		u.log.Error(errMsg)
-		return &model.User{}, err
+		return &models.User{}, err
 
 	}
 	if len(user.Code) != u.conf.SizeRandomStringValidation {
 		errMsg := "invalid user"
 		u.log.Error(errMsg)
-		return &model.User{}, err
+		return &models.User{}, err
 	}
 
 	return user, nil
