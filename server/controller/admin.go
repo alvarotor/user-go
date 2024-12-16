@@ -20,7 +20,7 @@ func (s *controllerUser) UpdateUserAdminStatus(ctx context.Context, email string
 
 	user.Admin = admin
 
-	err = s.Update(ctx, user.ID, *user)
+	err = s.UpdateField(ctx, user.ID, "admin", admin)
 	if err != nil {
 		return errors.New("failed to update user")
 	}
