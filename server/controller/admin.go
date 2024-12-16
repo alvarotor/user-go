@@ -18,8 +18,6 @@ func (s *controllerUser) UpdateUserAdminStatus(ctx context.Context, email string
 		return errors.New("user not found")
 	}
 
-	user.Admin = admin
-
 	err = s.UpdateField(ctx, user.ID, "admin", admin)
 	if err != nil {
 		return errors.New("failed to update user")
