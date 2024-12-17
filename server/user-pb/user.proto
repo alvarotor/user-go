@@ -39,6 +39,14 @@ message UserRequest {
 message UserLoginRequest {
   string email = 1;
   uint32 login_length_time = 2;
+  string browser = 3;
+  string browser_version = 4;
+  string operating_system = 5;
+  string operating_system_version = 6;
+  string cpu = 7;
+  string language = 8;
+  string timezone = 9;
+  bool cookies_enabled = 10;
 }
 
 message UserMailRequest {
@@ -47,6 +55,14 @@ message UserMailRequest {
 
 message UserTokenRequest {
   string token = 1;
+  string browser = 2;
+  string browser_version = 3;
+  string operating_system = 4;
+  string operating_system_version = 5;
+  string cpu = 6;
+  string language = 7;
+  string timezone = 8;
+  bool cookies_enabled = 9;
 }
 
 message UserIDRequest {

@@ -6,6 +6,17 @@ import (
 	"gorm.io/gorm"
 )
 
+type BaseSecurityLogin struct {
+	Browser                string `json:"browser"`
+	BrowserVersion         string `json:"browser_version"`
+	OperatingSystem        string `json:"operatingSystem"`
+	OperatingSystemVersion string `json:"operatingSystem_version"`
+	Cpu                    string `json:"cpu"`
+	Language               string `json:"language"`
+	Timezone               string `json:"timezone"`
+	CookiesEnabled         bool   `json:"cookies_enabled"`
+}
+
 type User struct {
 	gorm.Model
 	Email           string `gorm:"uniqueIndex:idx_email;not null" validate:"email,required"`
@@ -20,4 +31,5 @@ type User struct {
 	Code       string
 	CodeExpire time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	Bucket     string
+	BaseSecurityLogin
 }

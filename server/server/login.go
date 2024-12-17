@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/alvarotor/user-go/server/dto"
+	"github.com/alvarotor/user-go/server/models"
 	pb "github.com/alvarotor/user-go/server/user-pb"
 	"github.com/go-playground/validator/v10"
 )
@@ -12,6 +13,16 @@ func (s *UserServer) Login(ctx context.Context, req *pb.UserLoginRequest) (*pb.U
 	userLogin := dto.UserLogin{
 		Email: req.GetEmail(),
 		Time:  uint(req.LoginLengthTime),
+		BaseSecurityLogin: models.BaseSecurityLogin{
+			Browser:                req.GetBrowser(),
+			BrowserVersion:         req.GetBrowserVersion(),
+			OperatingSystem:        req.GetOperatingSystem(),
+			OperatingSystemVersion: req.GetOperatingSystemVersion(),
+			Cpu:                    req.GetCpu(),
+			Language:               req.GetLanguage(),
+			Timezone:               req.GetTimezone(),
+			CookiesEnabled:         req.GetCookiesEnabled(),
+		},
 	}
 
 	validator := validator.New(validator.WithRequiredStructEnabled())

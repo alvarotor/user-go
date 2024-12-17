@@ -9,7 +9,18 @@ import (
 )
 
 func (s *UserServer) TokenToUser(ctx context.Context, req *pb.UserTokenRequest) (*pb.UserResponse, error) {
-	user, err := s.Controller.TokenToUser(ctx, req.GetToken())
+	user, err := s.Controller.TokenToUser(
+		ctx,
+		req.GetToken(),
+		req.GetBrowser(),
+		req.GetBrowserVersion(),
+		req.GetOperatingSystem(),
+		req.GetOperatingSystemVersion(),
+		req.GetCpu(),
+		req.GetLanguage(),
+		req.GetTimezone(),
+		req.GetCookiesEnabled(),
+	)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserResponse{}, err

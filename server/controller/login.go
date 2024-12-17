@@ -31,6 +31,7 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 		user.Code = u.generateRandomString(u.conf.SizeRandomStringValidation)
 		user.CodeExpire = tenMinutes
 		user.Validated = false
+		user.BaseSecurityLogin = userLogin.BaseSecurityLogin
 
 		user, err := u.Create(c, *user)
 		if err != nil {
@@ -47,6 +48,7 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 		user.Code = u.generateRandomString(u.conf.SizeRandomStringValidation)
 		user.CodeExpire = tenMinutes
 		user.LoginLengthTime = uint32(userLogin.Time)
+		user.BaseSecurityLogin = userLogin.BaseSecurityLogin
 
 		err := u.Update(c, user.ID, *user)
 		if err != nil {

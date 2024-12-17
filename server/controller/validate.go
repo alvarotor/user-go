@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/alvarotor/user-go/server/dto"
@@ -24,7 +25,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 		return http.StatusBadRequest, models.Token{}, errors.New(errMsg)
 	}
 
-	if user.Code == "OUT" {
+	if user.Code == "OUT" || strings.TrimSpace(user.Code) == "" {
 		errMsg := "code is invalid"
 		u.log.Error(errMsg)
 		return http.StatusBadRequest, models.Token{}, errors.New(errMsg)
@@ -51,8 +52,18 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 		Admin:      user.Admin,
 		SuperAdmin: user.SuperAdmin,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expirationTime), //unix milliseconds
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			Issuer:    u.conf.Issuer,
+		},
+		BaseSecurityLogin: models.BaseSecurityLogin{
+			Browser:                user.Browser,
+			BrowserVersion:         user.BrowserVersion,
+			OperatingSystem:        user.OperatingSystem,
+			OperatingSystemVersion: user.OperatingSystemVersion,
+			Cpu:                    user.Cpu,
+			Language:               user.Language,
+			Timezone:               user.Timezone,
+			CookiesEnabled:         user.CookiesEnabled,
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

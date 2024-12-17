@@ -9,8 +9,18 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func (u *controllerUser) TokenToUser(c context.Context, token string) (*models.User, error) {
-
+func (u *controllerUser) TokenToUser(
+	c context.Context,
+	token string,
+	browser string,
+	browserVersion string,
+	operatingSystem string,
+	operatingSystemVersion string,
+	cpu string,
+	language string,
+	timezone string,
+	cookiesEnabled bool,
+) (*models.User, error) {
 	claims := &dto.ClaimsResponse{}
 
 	tkn, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (any, error) {
@@ -43,13 +53,29 @@ func (u *controllerUser) TokenToUser(c context.Context, token string) (*models.U
 	if user.Code == "OUT" {
 		errMsg := "user not logged"
 		u.log.Error(errMsg)
-		return &models.User{}, err
-
+		return &models.User{}, errors.New(errMsg)
 	}
 	if len(user.Code) != u.conf.SizeRandomStringValidation {
 		errMsg := "invalid user"
 		u.log.Error(errMsg)
-		return &models.User{}, err
+		return &models.User{}, errors.New(errMsg)
+	}
+
+	secs := models.BaseSecurityLogin{
+		Browser:                browser,
+		BrowserVersion:         browserVersion,
+		OperatingSystem:        operatingSystem,
+		OperatingSystemVersion: operatingSystemVersion,
+		Cpu:                    cpu,
+		Language:               language,
+		Timezone:               timezone,
+		CookiesEnabled:         cookiesEnabled,
+	}
+
+	if claims.BaseSecurityLogin != secs {
+		errMsg := "security questions user not match"
+		u.log.Error(errMsg)
+		return &models.User{}, errors.New(errMsg)
 	}
 
 	return user, nil
