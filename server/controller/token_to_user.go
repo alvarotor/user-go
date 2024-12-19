@@ -73,7 +73,7 @@ func (u *controllerUser) TokenToUser(
 	}
 
 	if claims.BaseSecurityLogin != secs {
-		errMsg := "security questions user not match"
+		errMsg := "security data user's token don't match"
 		u.log.Error(errMsg)
 		return &models.User{}, errors.New(errMsg)
 	}
