@@ -55,7 +55,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			Issuer:    u.conf.Issuer,
 		},
-		BaseSecurityLogin: models.BaseSecurityLogin{
+		DeviceInfo: models.DeviceInfo{
 			Browser:                user.Browser,
 			BrowserVersion:         user.BrowserVersion,
 			OperatingSystem:        user.OperatingSystem,

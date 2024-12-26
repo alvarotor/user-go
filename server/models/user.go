@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type BaseSecurityLogin struct {
+type DeviceInfo struct {
 	Browser                string `json:"browser"`
 	BrowserVersion         string `json:"browser_version"`
 	OperatingSystem        string `json:"operatingSystem"`
@@ -31,5 +31,5 @@ type User struct {
 	Code       string
 	CodeExpire time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	Bucket     string
-	BaseSecurityLogin
+	DeviceInfo
 }

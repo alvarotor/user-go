@@ -13,7 +13,7 @@ func (s *UserServer) Login(ctx context.Context, req *pb.UserLoginRequest) (*pb.U
 	userLogin := dto.UserLogin{
 		Email: req.GetEmail(),
 		Time:  uint(req.LoginLengthTime),
-		BaseSecurityLogin: models.BaseSecurityLogin{
+		DeviceInfo: models.DeviceInfo{
 			Browser:                req.GetBrowser(),
 			BrowserVersion:         req.GetBrowserVersion(),
 			OperatingSystem:        req.GetOperatingSystem(),

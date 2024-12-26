@@ -61,22 +61,22 @@ func (u *controllerUser) TokenToUser(
 		return &models.User{}, errors.New(errMsg)
 	}
 
-	// secs := models.BaseSecurityLogin{
-	// 	Browser:                browser,
-	// 	BrowserVersion:         browserVersion,
-	// 	OperatingSystem:        operatingSystem,
-	// 	OperatingSystemVersion: operatingSystemVersion,
-	// 	Cpu:                    cpu,
-	// 	Language:               language,
-	// 	Timezone:               timezone,
-	// 	CookiesEnabled:         cookiesEnabled,
-	// }
+	secs := models.DeviceInfo{
+		Browser:                browser,
+		BrowserVersion:         browserVersion,
+		OperatingSystem:        operatingSystem,
+		OperatingSystemVersion: operatingSystemVersion,
+		Cpu:                    cpu,
+		Language:               language,
+		Timezone:               timezone,
+		CookiesEnabled:         cookiesEnabled,
+	}
 
-	// if claims.BaseSecurityLogin != secs {
-	// 	errMsg := "security data user's token don't match"
-	// 	u.log.Error(errMsg)
-	// 	return &models.User{}, errors.New(errMsg)
-	// }
+	if claims.DeviceInfo != secs {
+		errMsg := "security data user's token don't match"
+		u.log.Error(errMsg)
+		return &models.User{}, errors.New(errMsg)
+	}
 
 	return user, nil
 }
