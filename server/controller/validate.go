@@ -78,6 +78,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 		Value:   tokenString,
 		Expires: expirationTime,
 		Email:   user.Email,
+		RefreshToken: user.CodeRefresh,
 	}
 
 	return http.StatusOK, model, nil

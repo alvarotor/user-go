@@ -28,7 +28,8 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 		user = new(models.User)
 		user.Email = userLogin.Email
 		user.LoginLengthTime = uint32(userLogin.Time)
-		user.Code = u.generateRandomString(u.conf.SizeRandomStringValidation)
+		user.Code = u.GenerateRandomString(u.conf.SizeRandomStringValidation)
+		user.CodeRefresh = u.GenerateRandomString(u.conf.SizeRandomStringValidationRefresh)
 		user.CodeExpire = tenMinutes
 		user.Validated = false
 		user.DeviceInfo = userLogin.DeviceInfo
@@ -45,7 +46,8 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 
 	} else {
 
-		user.Code = u.generateRandomString(u.conf.SizeRandomStringValidation)
+		user.Code = u.GenerateRandomString(u.conf.SizeRandomStringValidation)
+		user.CodeRefresh = u.GenerateRandomString(u.conf.SizeRandomStringValidationRefresh)
 		user.CodeExpire = tenMinutes
 		user.LoginLengthTime = uint32(userLogin.Time)
 		user.DeviceInfo = userLogin.DeviceInfo
@@ -58,11 +60,12 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 	}
 
 	u.log.Info("user code: " + user.Code)
+	u.log.Info("user code refresh: " + user.CodeRefresh)
 
 	return http.StatusOK, user.Code, nil
 }
 
-func (u *controllerUser) generateRandomString(length int) string {
+func (u *controllerUser) GenerateRandomString(length int) string {
 	r := rand.New(rand.NewSource(uint64(time.Now().UnixNano())))
 	var letters = []rune(u.conf.RandomStringValidation)
 	b := make([]rune, length)

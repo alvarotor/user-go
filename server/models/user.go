@@ -29,6 +29,7 @@ type User struct {
 	SuperAdmin bool `gorm:"not null;default:false"`
 	Validated  bool `gorm:"not null;default:false" validate:"boolean"`
 	Code       string
+	CodeRefresh string
 	CodeExpire time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	Bucket     string
 	DeviceInfo

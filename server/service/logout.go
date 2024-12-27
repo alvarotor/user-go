@@ -12,6 +12,7 @@ func (s *userService) LogOutSvc(ctx context.Context, email string) error {
 	}
 
 	user.Code = "OUT"
+	user.CodeRefresh = "OUT"
 	user.LoginLengthTime = 0
 	user.CodeExpire = time.Time{}
 

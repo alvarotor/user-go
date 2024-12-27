@@ -7,8 +7,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func (s *UserServer) Validate(ctx context.Context, req *pb.UserValidateRequest) (*pb.UserTokenResponse, error) {
-	status, token, err := s.Controller.Validate(ctx, req.GetCode())
+func (s *UserServer) Refresh(ctx context.Context, req *pb.UserValidateRefreshRequest) (*pb.UserTokenResponse, error) {
+	status, token, err := s.Controller.Refresh(ctx, req.GetRefreshToken())
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserTokenResponse{}, err

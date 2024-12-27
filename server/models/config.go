@@ -11,6 +11,8 @@ type Config struct {
 	POSTGRES_PASSWORD          string `validate:"required"`
 	RandomStringValidation     string `validate:"required"`
 	SizeRandomStringValidation int    `validate:"required"`
+	RandomStringValidationRefresh string `validate:"required"`
+	SizeRandomStringValidationRefresh int `validate:"required"`
 	Issuer                     string `validate:"required"`
 	JWTKey                     []byte
 }

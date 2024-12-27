@@ -16,4 +16,5 @@ type IControllerUser interface {
 	TokenToUser(context.Context, string, string, string, string, string, string, string, string, bool) (*models.User, error)
 	Health(context.Context, uint32) int
 	UpdateUserAdminStatus(context.Context, string, bool) error
+	Refresh(context.Context, string) (int, models.Token, error)
 }

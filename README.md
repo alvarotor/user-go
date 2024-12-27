@@ -51,6 +51,8 @@ POSTGRES_PASSWORD=your_db_password
 POSTGRES_PORT=5432
 RandomStringValidation=your_random_string
 SizeRandomStringValidation=32
+RandomStringValidationRefresh=your_random_string_refresh
+SizeRandomStringValidationRefresh=10
 Issuer=your_app_name
 JWT_KEY=your_jwt_secret
 ```
