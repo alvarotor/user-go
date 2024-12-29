@@ -1,4 +1,4 @@
-package service
+package services
 
 import (
 	"github.com/alvarotor/entitier-go/repository"

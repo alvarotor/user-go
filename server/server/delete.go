@@ -23,7 +23,7 @@ func (s *UserServer) Delete(ctx context.Context, req *pb.UserDeleteRequest) (*pb
 		return &pb.UserStatusResponse{}, err
 	}
 
-	err = s.Controller.Delete(ctx, uint(user.GetId()), req.Permanently)
+	err = s.UserController.Delete(ctx, uint(user.GetId()), req.Permanently)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserStatusResponse{}, err

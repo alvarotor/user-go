@@ -9,7 +9,7 @@ import (
 )
 
 func (s *UserServer) TokenToUser(ctx context.Context, req *pb.UserTokenRequest) (*pb.UserResponse, error) {
-	user, err := s.Controller.TokenToUser(
+	user, err := s.UserController.TokenToUser(
 		ctx,
 		req.GetToken(),
 		req.GetBrowser(),

@@ -31,7 +31,7 @@ func (s *UserServer) Login(ctx context.Context, req *pb.UserLoginRequest) (*pb.U
 		return &pb.UserLoginResponse{}, err
 	}
 
-	status, code, err := s.Controller.Login(ctx, userLogin)
+	status, code, err := s.UserController.Login(ctx, userLogin)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserLoginResponse{}, err

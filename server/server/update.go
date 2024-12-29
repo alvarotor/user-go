@@ -22,7 +22,7 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UserUpdateRequest) (*pb
 		return &pb.UserStatusResponse{}, err
 	}
 
-	userID, err := s.Controller.GetByEmail(ctx, req.Email)
+	userID, err := s.UserController.GetByEmail(ctx, req.Email)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserStatusResponse{}, err
@@ -31,7 +31,7 @@ func (s *UserServer) Update(ctx context.Context, req *pb.UserUpdateRequest) (*pb
 	userID.Name = user.Name
 	userID.ProfilePic = user.ProfilePic
 	userID.Bucket = user.Bucket
-	err = s.Controller.Update(ctx, uint(userID.ID), *userID)
+	err = s.UserController.Update(ctx, uint(userID.ID), *userID)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserStatusResponse{}, err

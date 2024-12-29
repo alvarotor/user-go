@@ -55,6 +55,10 @@ RandomStringValidationRefresh=your_random_string_refresh
 SizeRandomStringValidationRefresh=10
 Issuer=your_app_name
 JWT_KEY=your_jwt_secret
+JWT_KEY_REFRESH=your_jwt_secret_refresh
+
+
+
 ```
 
 ### 3. Running the Server
@@ -83,6 +87,7 @@ The service provides the following gRPC endpoints:
 - `Validate`: Validate user email
 - `GetByEmail`: Retrieve user by email
 - `TokenToUser`: Convert JWT token to user information
+- `Refresh`: Refresh JWT token
 
 ## Client Usage Example
 
@@ -113,10 +118,11 @@ if err != nil {
 ## Project Structure
 
 - `/server`: Server-side implementation
-  - `/controller`: Business logic
+  - `/server`: Server implementation
+  - `/controllers`: Business logic
   - `/db`: Database interactions
-  - `/model`: Data models
-  - `/service`: Service layer
+  - `/models`: Data models
+  - `/services`: Service layer
   - `/user-pb`: Protocol buffer definitions and generated code
 - `/client`: Client implementation and examples
 

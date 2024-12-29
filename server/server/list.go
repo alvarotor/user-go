@@ -9,8 +9,7 @@ import (
 )
 
 func (s *UserServer) List(ctx context.Context, _ *emptypb.Empty) (*pb.ListUsersResponse, error) {
-
-	users, err := s.Controller.GetAll(ctx)
+	users, err := s.UserController.GetAll(ctx)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.ListUsersResponse{}, err

@@ -8,8 +8,7 @@ import (
 )
 
 func (s *UserServer) Get(ctx context.Context, req *pb.UserIDRequest) (*pb.UserResponse, error) {
-
-	user, err := s.Controller.Get(ctx, uint(req.Id), "")
+	user, err := s.UserController.Get(ctx, uint(req.Id), "")
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserResponse{}, err

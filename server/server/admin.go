@@ -7,7 +7,7 @@ import (
 )
 
 func (s *UserServer) UpdateUserAdminStatus(ctx context.Context, req *pb.UpdateUserAdminRequest) (*pb.UserStatusResponse, error) {
-	err := s.Controller.UpdateUserAdminStatus(ctx, req.Email, req.Admin)
+	err := s.UserController.UpdateUserAdminStatus(ctx, req.Email, req.Admin)
 	if err != nil {
 		return nil, err
 	}

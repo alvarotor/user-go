@@ -32,7 +32,7 @@ func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 		return &pb.UserIDResponse{}, err
 	}
 
-	userCreated, err := s.Controller.Create(ctx, user)
+	userCreated, err := s.UserController.Create(ctx, user)
 	if err != nil {
 		s.Log.Error(err.Error())
 		return &pb.UserIDResponse{}, err

@@ -9,8 +9,7 @@ import (
 )
 
 func (s *UserServer) Health(ctx context.Context, req *pb.UserIDRequest) (*pb.UserStatusResponse, error) {
-
-	status := s.Controller.Health(ctx, req.GetId())
+	status := s.UserController.Health(ctx, req.GetId())
 	if status != http.StatusOK {
 		errMsg := "unhealthy"
 		s.Log.Error(errMsg)

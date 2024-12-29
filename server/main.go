@@ -9,11 +9,11 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/alvarotor/user-go/server/controller"
+	"github.com/alvarotor/user-go/server/controllers"
 	"github.com/alvarotor/user-go/server/db"
 	"github.com/alvarotor/user-go/server/models"
 	"github.com/alvarotor/user-go/server/server"
-	"github.com/alvarotor/user-go/server/service"
+	"github.com/alvarotor/user-go/server/services"
 	pb "github.com/alvarotor/user-go/server/user-pb"
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc/health"
@@ -38,11 +38,11 @@ func main() {
 
 	dbUser := db.GetDB_PG(&conf, l)
 
-	svc := service.NewUserService(dbUser)
-	con := controller.NewUserController(l, svc, &conf)
+	svc := services.NewUserService(dbUser)
+	con := controllers.NewUserController(l, svc, &conf)
 	userServer := server.UserServer{
-		Controller: con,
-		Log:        l,
+		UserController: con,
+		Log:            l,
 	}
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", conf.PROJECT_PORT_USER))

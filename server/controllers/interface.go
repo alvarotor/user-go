@@ -1,15 +1,15 @@
-package controller
+package controllers
 
 import (
 	"context"
 
 	"github.com/alvarotor/user-go/server/dto"
 	"github.com/alvarotor/user-go/server/models"
-	"github.com/alvarotor/user-go/server/service"
+	"github.com/alvarotor/user-go/server/services"
 )
 
 type IControllerUser interface {
-	service.IUserService
+	services.IUserService
 	Login(context.Context, dto.UserLogin) (int, string, error)
 	LogOut(context.Context, string) (int, error)
 	Validate(context.Context, string) (int, models.Token, error)
