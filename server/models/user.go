@@ -23,7 +23,6 @@ type User struct {
 	Password        string `gorm:"not null" validate:"required"`
 	Name            string `gorm:"not null" validate:"required"`
 	ProfilePic      string `gorm:"not null"`
-	LoginLengthTime uint32 `validate:"number"`
 	// server data
 	Admin      bool `gorm:"not null;default:false"`
 	SuperAdmin bool `gorm:"not null;default:false"`

@@ -22,7 +22,6 @@ func (s *UserServer) Get(ctx context.Context, req *pb.UserIDRequest) (*pb.UserRe
 		Validated:       user.Validated,
 		Admin:           user.Admin,
 		SuperAdmin:      user.SuperAdmin,
-		LoginLengthTime: user.LoginLengthTime,
 		Code:            user.Code,
 		CodeExpire:      timestamppb.New(user.CodeExpire),
 		Bucket:          user.Bucket,

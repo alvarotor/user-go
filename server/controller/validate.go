@@ -45,7 +45,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 		}
 	}
 
-	expirationTime := getExpirationTime(uint(user.LoginLengthTime))
+	expirationTime := getExpirationTime(uint(u.conf.TokenExpirationTime))
 
 	claims := &dto.ClaimsResponse{
 		Email:      user.Email,
@@ -55,16 +55,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 			Issuer:    u.conf.Issuer,
 		},
-		DeviceInfo: models.DeviceInfo{
-			Browser:                user.Browser,
-			BrowserVersion:         user.BrowserVersion,
-			OperatingSystem:        user.OperatingSystem,
-			OperatingSystemVersion: user.OperatingSystemVersion,
-			Cpu:                    user.Cpu,
-			Language:               user.Language,
-			Timezone:               user.Timezone,
-			CookiesEnabled:         user.CookiesEnabled,
-		},
+		DeviceInfo: createDeviceInfo(user),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(u.conf.JWTKey)
@@ -73,39 +64,50 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 		return http.StatusInternalServerError, models.Token{}, err
 	}
 
+	expirationTimeRefresh := getExpirationTime(uint(u.conf.TokenExpirationTimeRefresh))
+
+	claimsRefresh := &dto.ClaimsRefreshResponse{
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expirationTimeRefresh),
+			Issuer:    u.conf.Issuer,
+		},
+		DeviceInfo: createDeviceInfo(user),
+		RefreshToken: user.CodeRefresh,
+	}
+	tokenRefresh := jwt.NewWithClaims(jwt.SigningMethodHS256, claimsRefresh)
+	tokenRefreshString, err := tokenRefresh.SignedString(u.conf.JWTKey)
+	if err != nil {
+		u.log.Error(err.Error())
+		return http.StatusInternalServerError, models.Token{}, err
+	}
+
 	model := models.Token{
 		Name:    "token",
-		Value:   tokenString,
+		Token:   tokenString,
 		Expires: expirationTime,
 		Email:   user.Email,
-		RefreshToken: user.CodeRefresh,
+		RefreshToken: tokenRefreshString,
 	}
 
 	return http.StatusOK, model, nil
 }
 
-func getExpirationTime(timeUser uint) time.Time {
-
+func getExpirationTime(seconds uint) time.Time {
 	var expirationTime time.Time
 	now := time.Now().UTC()
-	switch timeUser {
-	case 1:
-		expirationTime = now.Add(time.Minute)
-	case 5:
-		expirationTime = now.Add(time.Duration(timeUser) * time.Minute)
-	case 60:
-		expirationTime = now.Add(time.Hour)
-	case 12:
-		expirationTime = now.Add(time.Duration(timeUser) * time.Hour)
-	case 24:
-		expirationTime = now.Add(time.Duration(timeUser) * time.Hour)
-	case 30:
-		expirationTime = now.Add(time.Duration(timeUser) * 24 * time.Hour)
-	case 365:
-		expirationTime = now.Add(time.Duration(timeUser) * 24 * time.Hour)
-	default:
-		expirationTime = now.Add(24 * time.Hour)
-	}
-
+	expirationTime = now.Add(time.Duration(seconds) * time.Second)
 	return expirationTime
+}
+
+func createDeviceInfo(user *models.User) models.DeviceInfo {
+	return models.DeviceInfo{
+		Browser:                user.Browser,
+		BrowserVersion:         user.BrowserVersion,
+		OperatingSystem:        user.OperatingSystem,
+		OperatingSystemVersion: user.OperatingSystemVersion,
+		Cpu:                    user.Cpu,
+		Language:               user.Language,
+		Timezone:               user.Timezone,
+		CookiesEnabled:         user.CookiesEnabled,
+	}
 }

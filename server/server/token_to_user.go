@@ -33,7 +33,6 @@ func (s *UserServer) TokenToUser(ctx context.Context, req *pb.UserTokenRequest) 
 		Validated:       user.Validated,
 		Admin:           user.Admin,
 		SuperAdmin:      user.SuperAdmin,
-		LoginLengthTime: user.LoginLengthTime,
 		Code:            user.Code,
 		CodeExpire:      timestamppb.New(user.CodeExpire),
 		Bucket:          user.Bucket,

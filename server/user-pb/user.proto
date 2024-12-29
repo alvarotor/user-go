@@ -28,26 +28,24 @@ message UserRequest {
   string password = 2;
   string name = 3;
   string profile_pic = 4;
-  uint32 login_length_time = 5;
-  bool validated = 6;
-  string validation_code = 7;
-  bool admin = 8;
-  bool super_admin = 9;
-  string code = 10;
-  google.protobuf.Timestamp code_expire = 11;
+  bool validated = 5;
+  string validation_code = 6;
+  bool admin = 7;
+  bool super_admin = 8;
+  string code = 9;
+  google.protobuf.Timestamp code_expire = 10;
 }
 
 message UserLoginRequest {
   string email = 1;
-  uint32 login_length_time = 2;
-  string browser = 3;
-  string browser_version = 4;
-  string operating_system = 5;
-  string operating_system_version = 6;
-  string cpu = 7;
-  string language = 8;
-  string timezone = 9;
-  bool cookies_enabled = 10;
+  string browser = 2;
+  string browser_version = 3;
+  string operating_system = 4;
+  string operating_system_version = 5;
+  string cpu = 6;
+  string language = 7;
+  string timezone = 8;
+  bool cookies_enabled = 9;
 }
 
 message UserMailRequest {
@@ -99,13 +97,12 @@ message UserResponse {
   string email = 1;
   string name = 2;
   string profile_pic = 3;
-  uint32 login_length_time = 4;
-  bool validated = 5;
-  bool admin = 7;
-  bool super_admin = 8;
-  string code = 9;
-  google.protobuf.Timestamp code_expire = 10;
-  string bucket = 11;
+  bool validated = 4;
+  bool admin = 5;
+  bool super_admin = 6;
+  string code = 7;
+  google.protobuf.Timestamp code_expire = 8;
+  string bucket = 9;
 }
 
 message UserValidateRequest {
@@ -131,7 +128,7 @@ message UserLoginResponse {
 
 message UserTokenResponse {
   string name = 1;
-  string value = 2;
+  string token = 2;
   google.protobuf.Timestamp expires = 3;
   string email = 4;
   uint32 status = 5;

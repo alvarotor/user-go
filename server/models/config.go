@@ -12,9 +12,12 @@ type Config struct {
 	RandomStringValidation     string `validate:"required"`
 	SizeRandomStringValidation int    `validate:"required"`
 	RandomStringValidationRefresh string `validate:"required"`
-	SizeRandomStringValidationRefresh int `validate:"required"`
-	Issuer                     string `validate:"required"`
-	JWTKey                     []byte
+	SizeRandomStringValidationRefresh int    `validate:"required"`
+	Issuer                             string `validate:"required"`
+	JWTKey                             []byte
+	JWTKey_Refresh 	[]byte
+	TokenExpirationTime                int    `validate:"required"`
+	TokenExpirationTimeRefresh         int    `validate:"required"`
 }
 
 func (c *Config) IsLocalENV() bool {

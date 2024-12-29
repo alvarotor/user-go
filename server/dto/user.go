@@ -13,9 +13,14 @@ type ClaimsResponse struct {
 	models.DeviceInfo
 }
 
+type ClaimsRefreshResponse struct {
+	jwt.RegisteredClaims
+	models.DeviceInfo
+	RefreshToken string `json:"refreshToken"`
+}
+
 type UserLogin struct {
 	Email string `json:"email" validate:"email,required"`
-	Time  uint   `json:"time" validate:"required,gt=0,lt=366"`
 	models.DeviceInfo
 }
 

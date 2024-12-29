@@ -16,7 +16,7 @@ func (s *UserServer) Refresh(ctx context.Context, req *pb.UserValidateRefreshReq
 
 	return &pb.UserTokenResponse{
 		Name:    token.Name,
-		Value:   token.Value,
+		Token:   token.Token,
 		Expires: timestamppb.New(token.Expires),
 		Email:   token.Email,
 		Status:  uint32(status),

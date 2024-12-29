@@ -18,7 +18,6 @@ import (
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc/health"
 	healthgrpc "google.golang.org/grpc/health/grpc_health_v1"
-	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
 func main() {
@@ -57,7 +56,7 @@ func main() {
 	pb.RegisterUserServer(s, &userServer)
 
 	// Set the service as healthy
-	healthcheck.SetServingStatus("system", healthpb.HealthCheckResponse_SERVING)
+	healthcheck.SetServingStatus("system", healthgrpc.HealthCheckResponse_SERVING)
 
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {

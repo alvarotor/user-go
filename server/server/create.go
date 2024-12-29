@@ -16,7 +16,6 @@ func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 		Name:            req.Name,
 		Password:        req.Password,
 		ProfilePic:      req.ProfilePic,
-		LoginLengthTime: req.LoginLengthTime,
 		Validated:       false,
 		Admin:           false,
 		SuperAdmin:      false,

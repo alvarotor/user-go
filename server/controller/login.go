@@ -27,7 +27,6 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 
 		user = new(models.User)
 		user.Email = userLogin.Email
-		user.LoginLengthTime = uint32(userLogin.Time)
 		user.Code = u.GenerateRandomString(u.conf.SizeRandomStringValidation)
 		user.CodeRefresh = u.GenerateRandomString(u.conf.SizeRandomStringValidationRefresh)
 		user.CodeExpire = tenMinutes
@@ -49,7 +48,6 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 		user.Code = u.GenerateRandomString(u.conf.SizeRandomStringValidation)
 		user.CodeRefresh = u.GenerateRandomString(u.conf.SizeRandomStringValidationRefresh)
 		user.CodeExpire = tenMinutes
-		user.LoginLengthTime = uint32(userLogin.Time)
 		user.DeviceInfo = userLogin.DeviceInfo
 
 		err := u.Update(c, user.ID, *user)

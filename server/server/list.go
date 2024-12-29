@@ -26,7 +26,6 @@ func (s *UserServer) List(ctx context.Context, _ *emptypb.Empty) (*pb.ListUsersR
 			Validated:       user.Validated,
 			Admin:           user.Admin,
 			SuperAdmin:      user.SuperAdmin,
-			LoginLengthTime: user.LoginLengthTime,
 			Code:            user.Code,
 			CodeExpire:      timestamppb.New(user.CodeExpire),
 			Bucket:          user.Bucket,
