@@ -22,19 +22,10 @@ import (
 
 func main() {
 	var conf models.Config
-
-	if conf.IsLocalENV() {
-		err := godotenv.Load()
-		if err != nil {
-			log.Fatal("error loading .env file")
-		}
-	}
+	loadEnvFile(&conf)
 	checkEnvVarsConf(&conf)
 
-	opts := &slog.HandlerOptions{
-		Level: slog.LevelDebug,
-	}
-	l := slog.New(slog.NewJSONHandler(os.Stdout, opts))
+	l := initLogger()
 
 	dbUser := db.GetDB_PG(&conf, l)
 
@@ -62,4 +53,19 @@ func main() {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
+}
+
+func loadEnvFile(conf *models.Config) {
+	if conf.IsLocalENV() {
+		if err := godotenv.Load(); err != nil {
+			log.Fatal("error loading .env file")
+		}
+	}
+}
+
+func initLogger() *slog.Logger {
+	opts := &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	}
+	return slog.New(slog.NewJSONHandler(os.Stdout, opts))
 }
