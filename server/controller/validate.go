@@ -72,7 +72,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 			Issuer:    u.conf.Issuer,
 		},
 		DeviceInfo: createDeviceInfo(user),
-		RefreshToken: user.CodeRefresh,
+		CodeRefresh: user.CodeRefresh,
 	}
 	tokenRefresh := jwt.NewWithClaims(jwt.SigningMethodHS256, claimsRefresh)
 	tokenRefreshString, err := tokenRefresh.SignedString(u.conf.JWTKey)
@@ -84,7 +84,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 	model := models.Token{
 		Name:    "token",
 		Token:   tokenString,
-		Expires: expirationTime,
+		ExpiresRefresh: expirationTimeRefresh,
 		Email:   user.Email,
 		RefreshToken: tokenRefreshString,
 	}

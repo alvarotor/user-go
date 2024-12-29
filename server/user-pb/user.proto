@@ -20,7 +20,7 @@ service User {
   rpc TokenToUser (UserTokenRequest) returns (UserResponse) {}
   rpc Health (UserIDRequest) returns (UserStatusResponse) {}
   rpc UpdateUserAdminStatus (UpdateUserAdminRequest) returns (UserStatusResponse) {}
-  rpc Refresh (UserValidateRefreshRequest) returns (UserTokenResponse) {}
+  rpc Refresh (UserTokenRequest) returns (UserTokenResponse) {}
 }
 
 message UserRequest {
@@ -109,18 +109,6 @@ message UserValidateRequest {
   string code = 1;
 }
 
-message UserValidateRefreshRequest {
-  string refresh_token = 1;
-  string browser = 2;
-  string browser_version = 3;
-  string operating_system = 4;
-  string operating_system_version = 5;
-  string cpu = 6;
-  string language = 7;
-  string timezone = 8;
-  bool cookies_enabled = 9;
-}
-
 message UserLoginResponse {
   string code = 1;
   uint32 status = 2;
@@ -129,10 +117,10 @@ message UserLoginResponse {
 message UserTokenResponse {
   string name = 1;
   string token = 2;
-  google.protobuf.Timestamp expires = 3;
-  string email = 4;
-  uint32 status = 5;
-  string refresh_token = 6;
+  string email = 3;
+  uint32 status = 4;
+  string refresh_token = 5;
+  google.protobuf.Timestamp expires_refresh = 6;
 }
 
 message UpdateUserAdminRequest {

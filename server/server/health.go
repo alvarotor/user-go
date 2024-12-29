@@ -12,12 +12,12 @@ func (s *UserServer) Health(ctx context.Context, req *pb.UserIDRequest) (*pb.Use
 
 	status := s.Controller.Health(ctx, req.GetId())
 	if status != http.StatusOK {
-		errMsg := "Not Healthy"
+		errMsg := "unhealthy"
 		s.Log.Error(errMsg)
 		return &pb.UserStatusResponse{}, errors.New(errMsg)
 	}
 
-	s.Log.Info("Healthy")
+	s.Log.Info("healthy")
 
 	return &pb.UserStatusResponse{
 		Status: http.StatusOK,

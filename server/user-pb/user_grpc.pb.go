@@ -51,7 +51,7 @@ type UserClient interface {
 	TokenToUser(ctx context.Context, in *UserTokenRequest, opts ...grpc.CallOption) (*UserResponse, error)
 	Health(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserStatusResponse, error)
 	UpdateUserAdminStatus(ctx context.Context, in *UpdateUserAdminRequest, opts ...grpc.CallOption) (*UserStatusResponse, error)
-	Refresh(ctx context.Context, in *UserValidateRefreshRequest, opts ...grpc.CallOption) (*UserTokenResponse, error)
+	Refresh(ctx context.Context, in *UserTokenRequest, opts ...grpc.CallOption) (*UserTokenResponse, error)
 }
 
 type userClient struct {
@@ -182,7 +182,7 @@ func (c *userClient) UpdateUserAdminStatus(ctx context.Context, in *UpdateUserAd
 	return out, nil
 }
 
-func (c *userClient) Refresh(ctx context.Context, in *UserValidateRefreshRequest, opts ...grpc.CallOption) (*UserTokenResponse, error) {
+func (c *userClient) Refresh(ctx context.Context, in *UserTokenRequest, opts ...grpc.CallOption) (*UserTokenResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UserTokenResponse)
 	err := c.cc.Invoke(ctx, User_Refresh_FullMethodName, in, out, cOpts...)
@@ -208,7 +208,7 @@ type UserServer interface {
 	TokenToUser(context.Context, *UserTokenRequest) (*UserResponse, error)
 	Health(context.Context, *UserIDRequest) (*UserStatusResponse, error)
 	UpdateUserAdminStatus(context.Context, *UpdateUserAdminRequest) (*UserStatusResponse, error)
-	Refresh(context.Context, *UserValidateRefreshRequest) (*UserTokenResponse, error)
+	Refresh(context.Context, *UserTokenRequest) (*UserTokenResponse, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -255,7 +255,7 @@ func (UnimplementedUserServer) Health(context.Context, *UserIDRequest) (*UserSta
 func (UnimplementedUserServer) UpdateUserAdminStatus(context.Context, *UpdateUserAdminRequest) (*UserStatusResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserAdminStatus not implemented")
 }
-func (UnimplementedUserServer) Refresh(context.Context, *UserValidateRefreshRequest) (*UserTokenResponse, error) {
+func (UnimplementedUserServer) Refresh(context.Context, *UserTokenRequest) (*UserTokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
@@ -496,7 +496,7 @@ func _User_UpdateUserAdminStatus_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _User_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserValidateRefreshRequest)
+	in := new(UserTokenRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -508,7 +508,7 @@ func _User_Refresh_Handler(srv interface{}, ctx context.Context, dec func(interf
 		FullMethod: User_Refresh_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).Refresh(ctx, req.(*UserValidateRefreshRequest))
+		return srv.(UserServer).Refresh(ctx, req.(*UserTokenRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

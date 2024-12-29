@@ -26,26 +26,11 @@ func (u *controllerUser) TokenToUser(
 	tkn, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (any, error) {
 		return u.conf.JWTKey, nil
 	})
-	if errors.Is(err, jwt.ErrSignatureInvalid) {
-		errMsg := "invalid signature token"
-		u.log.Error(errMsg)
-		return &models.User{}, errors.New(errMsg)
+
+	if err := u.validateToken(tkn, err); err != nil {
+		return &models.User{}, err
 	}
-	if errors.Is(err, jwt.ErrTokenExpired) {
-		errMsg := "invalid signature token"
-		u.log.Error(errMsg)
-		return &models.User{}, errors.New(errMsg)
-	}
-	if err != nil {
-		errMsg := "error parsing token"
-		u.log.Error(errMsg)
-		return &models.User{}, errors.New(errMsg)
-	}
-	if !tkn.Valid {
-		errMsg := "invalid token"
-		u.log.Error(errMsg)
-		return &models.User{}, errors.New(errMsg)
-	}
+
 	user, err := u.GetByEmail(c, claims.Email)
 	if err != nil {
 		return &models.User{}, err
@@ -79,4 +64,25 @@ func (u *controllerUser) TokenToUser(
 	}
 
 	return user, nil
+}
+
+func (u *controllerUser) validateToken(tkn *jwt.Token, err error) error {
+	if errors.Is(err, jwt.ErrSignatureInvalid) {
+		return u.logAndReturnError("invalid signature token")
+	}
+	if errors.Is(err, jwt.ErrTokenExpired) {
+		return u.logAndReturnError("token expired")
+	}
+	if err != nil {
+		return u.logAndReturnError("error parsing token")
+	}
+	if !tkn.Valid {
+		return u.logAndReturnError("invalid token")
+	}
+	return nil
+}
+
+func (u *controllerUser) logAndReturnError(errMsg string) error {
+	u.log.Error(errMsg)
+	return errors.New(errMsg)
 }

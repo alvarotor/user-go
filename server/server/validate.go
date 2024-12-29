@@ -15,11 +15,11 @@ func (s *UserServer) Validate(ctx context.Context, req *pb.UserValidateRequest) 
 	}
 
 	return &pb.UserTokenResponse{
-		Name:    token.Name,
-		Token:   token.Token,
-		Expires: timestamppb.New(token.Expires),
-		Email:   token.Email,
-		Status:  uint32(status),
-		RefreshToken: token.RefreshToken,
+		Name:           token.Name,
+		Token:          token.Token,
+		ExpiresRefresh: timestamppb.New(token.ExpiresRefresh),
+		Email:          token.Email,
+		Status:         uint32(status),
+		RefreshToken:   token.RefreshToken,
 	}, nil
 }

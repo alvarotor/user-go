@@ -16,7 +16,7 @@ type ClaimsResponse struct {
 type ClaimsRefreshResponse struct {
 	jwt.RegisteredClaims
 	models.DeviceInfo
-	RefreshToken string `json:"refreshToken"`
+	CodeRefresh string `json:"codeRefresh"`
 }
 
 type UserLogin struct {
