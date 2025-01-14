@@ -3,9 +3,9 @@ package models
 import "time"
 
 type Token struct {
-	Name           string    `json:"name" default:"token"`
-	Token          string    `json:"value"`
-	ExpiresRefresh time.Time `json:"expires_refresh"`
-	Email          string    `json:"email"`
-	RefreshToken   string    `json:"refresh_token"`
+	Email              string    `json:"email"`
+	Token              string    `json:"token"`
+	TokenExpires       time.Time `json:"token_expires"`
+	TokenRefresh       string    `json:"refresh_token"`
+	TokenRefreshExpires time.Time `json:"refresh_expires"`
 }

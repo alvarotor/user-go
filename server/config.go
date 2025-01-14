@@ -16,12 +16,15 @@ func checkEnvVarsConf(conf *models.Config) {
 	checkEnvVar("POSTGRES_PASSWORD")
 	checkEnvVar("POSTGRES_PORT")
 	checkEnvVar("RandomStringValidation")
+	checkEnvVar("RandomStringValidationRefresh")
 	checkEnvVar("SizeRandomStringValidation")
+	checkEnvVar("SizeRandomStringValidationRefresh")
 	checkEnvVar("Issuer")
 	checkEnvVar("JWT_KEY")
 	checkEnvVar("JWT_KEY_REFRESH")
 	checkEnvVar("TOKEN_EXPIRATION_TIME")
 	checkEnvVar("TOKEN_EXPIRATION_TIME_REFRESH")
+	checkEnvVar("ENV")
 
 	project_port, err := strconv.Atoi(os.Getenv("PROJECT_PORT_USER"))
 	if err != nil {
@@ -39,6 +42,12 @@ func checkEnvVarsConf(conf *models.Config) {
 		log.Fatalf(`Missing SizeRandomStringValidation env var`)
 	}
 	conf.SizeRandomStringValidation = sizeRandomStringValidation
+	conf.RandomStringValidationRefresh = os.Getenv("RandomStringValidationRefresh")
+	sizeRandomStringValidationRefresh, err := strconv.Atoi(os.Getenv("SizeRandomStringValidationRefresh"))
+	if err != nil {
+		log.Fatalf(`Missing SizeRandomStringValidation env var`)
+	}
+	conf.SizeRandomStringValidationRefresh = sizeRandomStringValidationRefresh
 	conf.Issuer = os.Getenv("Issuer")
 	conf.JWTKey = []byte(os.Getenv("JWT_KEY"))
 	conf.JWTKey_Refresh = []byte(os.Getenv("JWT_KEY_REFRESH"))

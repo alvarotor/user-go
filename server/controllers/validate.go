@@ -82,11 +82,11 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 	}
 
 	model := models.Token{
-		Name:    "token",
-		Token:   tokenString,
-		ExpiresRefresh: expirationTimeRefresh,
+		Token:               tokenString,
+		TokenRefresh:        tokenRefreshString,
 		Email:   user.Email,
-		RefreshToken: tokenRefreshString,
+		TokenExpires: expirationTime,
+		TokenRefreshExpires: expirationTimeRefresh,
 	}
 
 	return http.StatusOK, model, nil

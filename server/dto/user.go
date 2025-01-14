@@ -7,10 +7,10 @@ import (
 
 type ClaimsResponse struct {
 	jwt.RegisteredClaims
+	models.DeviceInfo
 	Email      string `json:"email"`
 	Admin      bool   `json:"admin"`
 	SuperAdmin bool   `json:"superAdmin"`
-	models.DeviceInfo
 }
 
 type ClaimsRefreshResponse struct {
@@ -20,8 +20,8 @@ type ClaimsRefreshResponse struct {
 }
 
 type UserLogin struct {
-	Email string `json:"email" validate:"email,required"`
 	models.DeviceInfo
+	Email string `json:"email" validate:"email,required"`
 }
 
 type UserUpdate struct {

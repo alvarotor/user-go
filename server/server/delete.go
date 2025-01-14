@@ -10,8 +10,9 @@ import (
 func (s *UserServer) Delete(ctx context.Context, req *pb.UserDeleteRequest) (*pb.UserStatusResponse, error) {
 
 	if req.GetEmail() == "" {
-		s.Log.Error("email is required")
-		return &pb.UserStatusResponse{}, errors.New("email is required")
+		errMsg:="email is required"
+		s.Log.Error(errMsg)
+		return &pb.UserStatusResponse{}, errors.New(errMsg)
 	}
 
 	userMailRequest := pb.UserMailRequest{

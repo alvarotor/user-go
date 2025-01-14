@@ -56,9 +56,9 @@ SizeRandomStringValidationRefresh=10
 Issuer=your_app_name
 JWT_KEY=your_jwt_secret
 JWT_KEY_REFRESH=your_jwt_secret_refresh
-
-
-
+TOKEN_EXPIRATION_TIME=600 #ten minutes
+TOKEN_EXPIRATION_TIME_REFRESH=604800 #seven days
+ENV=local
 ```
 
 ### 3. Running the Server

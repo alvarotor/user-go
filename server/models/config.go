@@ -27,3 +27,11 @@ func (c *Config) IsLocalENV() bool {
 func (c *Config) IsDevENV() bool {
 	return os.Getenv("ENV") == "dev"
 }
+
+func (c *Config) IsProdENV() bool {
+	return os.Getenv("ENV") == "prod"
+}
+
+func (c *Config) IsStagingENV() bool {
+	return os.Getenv("ENV") == "staging"
+}

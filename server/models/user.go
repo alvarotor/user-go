@@ -9,8 +9,8 @@ import (
 type DeviceInfo struct {
 	Browser                string `json:"browser"`
 	BrowserVersion         string `json:"browser_version"`
-	OperatingSystem        string `json:"operatingSystem"`
-	OperatingSystemVersion string `json:"operatingSystem_version"`
+	OperatingSystem        string `json:"operating_system"`
+	OperatingSystemVersion string `json:"operating_system_version"`
 	Cpu                    string `json:"cpu"`
 	Language               string `json:"language"`
 	Timezone               string `json:"timezone"`
@@ -18,7 +18,9 @@ type DeviceInfo struct {
 }
 
 type User struct {
+	//user data
 	gorm.Model
+	DeviceInfo
 	Email           string `gorm:"uniqueIndex:idx_email;not null" validate:"email,required"`
 	Password        string `gorm:"not null" validate:"required"`
 	Name            string `gorm:"not null" validate:"required"`
@@ -31,5 +33,4 @@ type User struct {
 	CodeRefresh string
 	CodeExpire time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	Bucket     string
-	DeviceInfo
 }
