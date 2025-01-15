@@ -13,7 +13,7 @@ func (s *userService) LogOutSvc(ctx context.Context, email string) error {
 
 	user.Code = "OUT"
 	user.CodeRefresh = "OUT"
-	user.CodeExpire = time.Time{}
+	user.CodeExpire = time.Now().UTC()
 
 	return s.Update(ctx, user.ID, *user)
 }

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"context"
-	"errors"
 	"net/http"
 	"strings"
 	"time"
@@ -20,21 +19,18 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 	}
 
 	if user == nil {
-		errMsg := "code is invalid"
-		u.log.Error(errMsg)
-		return http.StatusBadRequest, models.Token{}, errors.New(errMsg)
+		u.log.Error(models.ErrInvalidCode.Error())
+		return http.StatusBadRequest, models.Token{}, models.ErrInvalidCode
 	}
 
 	if user.Code == "OUT" || strings.TrimSpace(user.Code) == "" {
-		errMsg := "code is invalid"
-		u.log.Error(errMsg)
-		return http.StatusBadRequest, models.Token{}, errors.New(errMsg)
+		u.log.Error(models.ErrInvalidCode.Error())
+		return http.StatusBadRequest, models.Token{}, models.ErrInvalidCode
 	}
 
 	if user.CodeExpire.Before(time.Now().UTC()) {
-		errMsg := "code is expired"
-		u.log.Error(errMsg)
-		return http.StatusBadRequest, models.Token{}, errors.New(errMsg)
+		u.log.Error(models.ErrExpiredCode.Error())
+		return http.StatusBadRequest, models.Token{}, models.ErrExpiredCode
 	}
 
 	if !user.Validated {
@@ -71,7 +67,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 			ExpiresAt: jwt.NewNumericDate(expirationTimeRefresh),
 			Issuer:    u.conf.Issuer,
 		},
-		DeviceInfo: createDeviceInfo(user),
+		DeviceInfo:  createDeviceInfo(user),
 		CodeRefresh: user.CodeRefresh,
 	}
 	tokenRefresh := jwt.NewWithClaims(jwt.SigningMethodHS256, claimsRefresh)
@@ -84,8 +80,8 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 	model := models.Token{
 		Token:               tokenString,
 		TokenRefresh:        tokenRefreshString,
-		Email:   user.Email,
-		TokenExpires: expirationTime,
+		Email:               user.Email,
+		TokenExpires:        expirationTime,
 		TokenRefreshExpires: expirationTimeRefresh,
 	}
 

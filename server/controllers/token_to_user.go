@@ -36,14 +36,12 @@ func (u *controllerUser) TokenToUser(
 		return &models.User{}, err
 	}
 	if user.Code == "OUT" {
-		errMsg := "user not logged"
-		u.log.Error(errMsg)
-		return &models.User{}, errors.New(errMsg)
+		u.log.Error(models.ErrUserNotLogged.Error())
+		return &models.User{}, models.ErrUserNotLogged
 	}
 	if len(user.Code) != u.conf.SizeRandomStringValidation {
-		errMsg := "invalid user"
-		u.log.Error(errMsg)
-		return &models.User{}, errors.New(errMsg)
+		u.log.Error(models.ErrInvalidUser.Error())
+		return &models.User{}, models.ErrInvalidUser
 	}
 
 	secs := models.DeviceInfo{
@@ -58,9 +56,8 @@ func (u *controllerUser) TokenToUser(
 	}
 
 	if claims.DeviceInfo != secs {
-		errMsg := "security data user's token don't match"
-		u.log.Error(errMsg)
-		return &models.User{}, errors.New(errMsg)
+		u.log.Error(models.ErrSecurityMismatch.Error())
+		return &models.User{}, models.ErrSecurityMismatch
 	}
 
 	return user, nil
@@ -68,16 +65,16 @@ func (u *controllerUser) TokenToUser(
 
 func (u *controllerUser) validateToken(tkn *jwt.Token, err error) error {
 	if errors.Is(err, jwt.ErrSignatureInvalid) {
-		return u.logAndReturnError("invalid signature token")
+		return u.logAndReturnError(models.ErrInvalidSignature.Error())
 	}
 	if errors.Is(err, jwt.ErrTokenExpired) {
-		return u.logAndReturnError("token expired")
+		return u.logAndReturnError(models.ErrTokenExpired.Error())
 	}
 	if err != nil {
-		return u.logAndReturnError("error parsing token")
+		return u.logAndReturnError(models.ErrParsingToken.Error())
 	}
 	if !tkn.Valid {
-		return u.logAndReturnError("invalid token")
+		return u.logAndReturnError(models.ErrInvalidToken.Error())
 	}
 	return nil
 }
