@@ -21,7 +21,6 @@ func checkEnvVarsConf(conf *models.Config) {
 	checkEnvVar("SizeRandomStringValidationRefresh")
 	checkEnvVar("Issuer")
 	checkEnvVar("JWT_KEY")
-	checkEnvVar("JWT_KEY_REFRESH")
 	checkEnvVar("TOKEN_EXPIRATION_TIME")
 	checkEnvVar("TOKEN_EXPIRATION_TIME_REFRESH")
 	checkEnvVar("ENV")
@@ -50,7 +49,6 @@ func checkEnvVarsConf(conf *models.Config) {
 	conf.SizeRandomStringValidationRefresh = sizeRandomStringValidationRefresh
 	conf.Issuer = os.Getenv("Issuer")
 	conf.JWTKey = []byte(os.Getenv("JWT_KEY"))
-	conf.JWTKey_Refresh = []byte(os.Getenv("JWT_KEY_REFRESH"))
 	tokenExpirationTime, err := strconv.Atoi(os.Getenv("TOKEN_EXPIRATION_TIME"))
 	if err != nil {
 		log.Fatalf(`Missing TOKEN_EXPIRATION_TIME env var`)

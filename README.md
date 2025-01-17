@@ -55,7 +55,6 @@ RandomStringValidationRefresh=your_random_string_refresh
 SizeRandomStringValidationRefresh=10
 Issuer=your_app_name
 JWT_KEY=your_jwt_secret
-JWT_KEY_REFRESH=your_jwt_secret_refresh
 TOKEN_EXPIRATION_TIME=600 #ten minutes
 TOKEN_EXPIRATION_TIME_REFRESH=604800 #seven days
 ENV=local
@@ -105,7 +104,6 @@ client := pb.NewUserClient(conn)
 // Example: Create a new user
 user := &pb.UserRequest{
     Email:    "test@example.com",
-    Password: "password123",
     Name:     "Test User",
 }
 

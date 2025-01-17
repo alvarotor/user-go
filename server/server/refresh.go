@@ -15,11 +15,11 @@ func (s *UserServer) Refresh(ctx context.Context, req *pb.UserTokenRequest) (*pb
 	}
 
 	return &pb.UserTokenResponse{
-		Token:          token.Token,
-		TokenRefresh:  token.TokenRefresh,
+		Token:               token.Token,
+		TokenRefresh:        token.TokenRefresh,
 		TokenRefreshExpires: timestamppb.New(token.TokenRefreshExpires),
-		TokenExpires: timestamppb.New(token.TokenExpires),
-		Email:          token.Email,
-		Status:         uint32(status),
+		TokenExpires:        timestamppb.New(token.TokenExpires),
+		Email:               token.Email,
+		Status:              uint32(status),
 	}, nil
 }

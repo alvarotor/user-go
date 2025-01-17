@@ -25,15 +25,13 @@ service User {
 
 message UserRequest {
   string email = 1;
-  string password = 2;
-  string name = 3;
-  string profile_pic = 4;
-  bool validated = 5;
-  string validation_code = 6;
-  bool admin = 7;
-  bool super_admin = 8;
-  string code = 9;
-  google.protobuf.Timestamp code_expire = 10;
+  string name = 2;
+  string profile_pic = 3;
+  bool validated = 4;
+  bool admin = 5;
+  bool super_admin = 6;
+  string code = 7;
+  google.protobuf.Timestamp code_expire = 8;
 }
 
 message UserLoginRequest {

@@ -15,7 +15,6 @@ type Config struct {
 	SizeRandomStringValidationRefresh int    `validate:"required"`
 	Issuer                             string `validate:"required"`
 	JWTKey                             []byte
-	JWTKey_Refresh 	[]byte
 	TokenExpirationTime                int    `validate:"required"`
 	TokenExpirationTimeRefresh         int    `validate:"required"`
 }

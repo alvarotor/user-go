@@ -14,7 +14,6 @@ func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserI
 	user := models.User{
 		Email:           req.Email,
 		Name:            req.Name,
-		Password:        req.Password,
 		ProfilePic:      req.ProfilePic,
 		Validated:       false,
 		Admin:           false,

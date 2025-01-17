@@ -12,10 +12,10 @@ import (
 )
 
 func (u *controllerUser) Refresh(ctx context.Context, refreshToken string) (int, *models.Token, error) {
-		claims := &dto.ClaimsRefreshResponse{}
+	claims := &dto.ClaimsRefreshResponse{}
 
 	tkn, err := jwt.ParseWithClaims(refreshToken, claims, func(token *jwt.Token) (any, error) {
-		return u.conf.JWTKey_Refresh, nil
+		return u.conf.JWTKey, nil
 	})
 
 	if err := u.validateToken(tkn, err); err != nil {
@@ -28,13 +28,13 @@ func (u *controllerUser) Refresh(ctx context.Context, refreshToken string) (int,
 	}
 
 	if user == nil {
-		errMsg := "code is invalid"
+		errMsg := "code refresh is invalid"
 		u.log.Error(errMsg)
 		return http.StatusBadRequest, &models.Token{}, errors.New(errMsg)
 	}
 
 	if user.Code == "OUT" || strings.TrimSpace(user.Code) == "" {
-		errMsg := "code is invalid"
+		errMsg := "code refresh is invalid"
 		u.log.Error(errMsg)
 		return http.StatusBadRequest, &models.Token{}, errors.New(errMsg)
 	}
@@ -45,16 +45,16 @@ func (u *controllerUser) Refresh(ctx context.Context, refreshToken string) (int,
 		return http.StatusBadRequest, &models.Token{}, errors.New(errMsg)
 	}
 
-	status, modelToken, err := u.Validate(ctx, user.Code)
-	if err != nil {
-		return http.StatusBadRequest, &models.Token{}, err
-	}
-
 	user.CodeRefresh = u.GenerateRandomString(u.conf.SizeRandomStringValidationRefresh)
 	err = u.UpdateField(ctx, user.ID, "code_refresh", user.CodeRefresh)
 	if err != nil {
 		u.log.Error(err.Error())
 		return http.StatusInternalServerError, &models.Token{}, err
+	}
+
+	status, modelToken, err := u.Validate(ctx, user.Code)
+	if err != nil {
+		return http.StatusBadRequest, &models.Token{}, err
 	}
 
 	return status, &modelToken, nil

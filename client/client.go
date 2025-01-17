@@ -26,7 +26,6 @@ func main() {
 	// Create a new user
 	user := &pb.UserRequest{
 		Email:    "test@example.com",
-		Password: "password123",
 		Name:     "Test User",
 		// Set other fields as needed
 	}
