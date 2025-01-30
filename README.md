@@ -60,6 +60,8 @@ TOKEN_EXPIRATION_TIME_REFRESH=604800 #seven days
 ENV=local
 ```
 
+Set ENV local to run the project in your machine, set it DEV when run it in docker and our a server.
+
 ### 3. Running the Server
 
 ```bash
