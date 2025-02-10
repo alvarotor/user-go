@@ -2,3 +2,4 @@ server/tmp/*
 server/.env
 server/__debug_bin*
 tmp/*
+.DS_Store
