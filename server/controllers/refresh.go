@@ -23,8 +23,11 @@ func (u *controllerUser) Refresh(ctx context.Context, refreshToken string) (int,
 	}
 
 	user, err := u.GetByCodeRefresh(ctx, claims.CodeRefresh)
+	if errors.Is(err, models.ErrUserNotFound) {
+		return http.StatusNotFound, &models.Token{}, models.ErrInvalidCode
+	}
 	if err != nil {
-		return http.StatusNotFound, &models.Token{}, err
+		return http.StatusInternalServerError, &models.Token{}, err
 	}
 
 	if user == nil {
