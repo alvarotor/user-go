@@ -48,7 +48,6 @@ func main() {
 	healthgrpc.RegisterHealthServer(s, healthcheck)
 	pb.RegisterUserServer(s, &userServer)
 
-	// Set the service as healthy
 	healthcheck.SetServingStatus("system", healthgrpc.HealthCheckResponse_SERVING)
 
 	log.Printf("server listening at %v", lis.Addr())
@@ -59,6 +58,7 @@ func main() {
 
 func loadEnvFile(conf *models.Config) {
 	if conf.IsLocalENV() {
+		log.Println("Loading .env file")
 		if err := godotenv.Load(); err != nil {
 			log.Fatal("error loading .env file")
 		}
