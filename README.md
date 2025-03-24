@@ -44,11 +44,11 @@ Create a `.env` file in the root directory with the following variables:
 
 ```env
 PROJECT_PORT_USER=50051
-POSTGRES_HOST=localhost
-POSTGRES_DB=your_db_name
-POSTGRES_USER=your_db_user
-POSTGRES_PASSWORD=your_db_password
-POSTGRES_PORT=5432
+POSTGRES_HOST_USER=localhost
+POSTGRES_DB_USER=your_db_name
+POSTGRES_USER_USER=your_db_user
+POSTGRES_PASSWORD_USER=your_db_password
+POSTGRES_PORT_USER=5432
 RandomStringValidation=your_random_string
 SizeRandomStringValidation=32
 RandomStringValidationRefresh=your_random_string_refresh
