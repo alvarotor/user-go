@@ -27,6 +27,8 @@ func main() {
 
 	l := initLogger()
 
+	l.Info("User service starting in environment: ", "env", conf.ENV)
+
 	dbUser := db.GetDB_PG(&conf, l)
 
 	svc := services.NewUserService(dbUser)

@@ -1,0 +1,14 @@
+{
+    "healthchecks": {
+        "web": [
+            {
+                "type": "startup",
+                "name": "service check",
+                "description": "Checking if the user service is running",
+                "path": "/v1/health",
+                "attempts": 5,
+                "wait": 30
+            }
+        ]
+    }
+}

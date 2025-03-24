@@ -59,6 +59,7 @@ func checkEnvVarsConf(conf *models.Config) {
 		log.Fatalf(`Missing TOKEN_EXPIRATION_TIME_REFRESH env var`)
 	}
 	conf.TokenExpirationTimeRefresh = tokenExpirationTimeRefresh
+	conf.ENV = os.Getenv("ENV")
 }
 
 func checkEnvVar(envVar string) {
