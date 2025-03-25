@@ -32,7 +32,7 @@ func checkEnvVarsConf(conf *models.Config) {
 	conf.PROJECT_PORT_USER = project_port
 	conf.POSTGRES_HOST = os.Getenv("POSTGRES_HOST_USER")
 	conf.POSTGRES_DB = os.Getenv("POSTGRES_DB_USER")
-	conf.POSTGRES_USER = os.Getenv("POSTGRES_USE_USERR")
+	conf.POSTGRES_USER = os.Getenv("POSTGRES_USER_USER")
 	conf.POSTGRES_PASSWORD = os.Getenv("POSTGRES_PASSWORD_USER")
 	conf.POSTGRES_PORT = os.Getenv("POSTGRES_PORT_USER")
 	conf.RandomStringValidation = os.Getenv("RandomStringValidation")
