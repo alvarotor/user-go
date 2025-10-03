@@ -66,7 +66,20 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 	if len(codeRefreshPreview) > 8 {
 		codeRefreshPreview = codeRefreshPreview[:8] + "..."
 	}
-	u.log.Info("Generating refresh token", "email", user.Email, "refresh_expiration_config", u.conf.TokenExpirationTimeRefresh, "code_refresh", codeRefreshPreview, "refresh_expires_at", expirationTimeRefresh.Unix(), "now", time.Now().UTC().Unix())
+
+	// Debug refresh token duration calculation
+	now := time.Now().UTC()
+	refreshDurationSeconds := int(expirationTimeRefresh.Sub(now).Seconds())
+	u.log.Info("🔍 [TOKEN_CREATION] Refresh token expires at",
+		"expiration_time", expirationTimeRefresh,
+		"duration_seconds", refreshDurationSeconds,
+		"config_value", u.conf.TokenExpirationTimeRefresh,
+		"expected", 30,
+		"now", now)
+	u.log.Info("🔍 [TOKEN_CREATION] Refresh token timing check",
+		"config_value", u.conf.TokenExpirationTimeRefresh,
+		"calculated_duration", refreshDurationSeconds,
+		"matches_expected", refreshDurationSeconds == u.conf.TokenExpirationTimeRefresh)
 
 	claimsRefresh := &dto.ClaimsRefreshResponse{
 		RegisteredClaims: jwt.RegisteredClaims{
