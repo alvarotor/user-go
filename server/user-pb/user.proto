@@ -124,4 +124,13 @@ message UserTokenResponse {
 message UpdateUserAdminRequest {
   string email = 1;
   bool admin = 2;
+  string token = 3;
+  string browser = 4;
+  string browser_version = 5;
+  string operating_system = 6;
+  string operating_system_version = 7;
+  string cpu = 8;
+  string language = 9;
+  string timezone = 10;
+  bool cookies_enabled = 11;
 }

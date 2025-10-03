@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"crypto/rand"
 	"errors"
 	"net/http"
 	"time"
@@ -9,7 +10,6 @@ import (
 	entModels "github.com/alvarotor/entitier-go/models"
 	"github.com/alvarotor/user-go/server/dto"
 	"github.com/alvarotor/user-go/server/models"
-	"golang.org/x/exp/rand"
 )
 
 func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int, string, error) {
@@ -64,11 +64,14 @@ func (u *controllerUser) Login(c context.Context, userLogin dto.UserLogin) (int,
 }
 
 func (u *controllerUser) GenerateRandomString(length int) string {
-	r := rand.New(rand.NewSource(uint64(time.Now().UnixNano())))
 	var letters = []rune(u.conf.RandomStringValidation)
-	b := make([]rune, length)
+	b := make([]byte, length)
+	if _, err := rand.Read(b); err != nil {
+		u.log.Error(err.Error())
+		return ""
+	}
 	for i := range b {
-		b[i] = letters[r.Intn(len(letters))]
+		b[i] = byte(letters[int(b[i])%len(letters)])
 	}
 	return string(b)
 }

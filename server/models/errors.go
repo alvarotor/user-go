@@ -5,6 +5,7 @@ import "errors"
 var (
 	ErrUserNotFound         = errors.New("user not found")
 	ErrUserNotAuthenticated = errors.New("user not authenticated")
+	ErrUnauthorized         = errors.New("unauthorized: insufficient permissions")
 	ErrInvalidCode          = errors.New("code is invalid")
 	ErrExpiredCode          = errors.New("code is expired")
 	ErrUserNotLogged        = errors.New("user not logged")

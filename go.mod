@@ -7,7 +7,6 @@ require (
 	github.com/go-playground/validator/v10 v10.23.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/joho/godotenv v1.5.1
-	golang.org/x/exp v0.0.0-20241215155358-4a5509556b9e
 	google.golang.org/grpc v1.69.0
 	google.golang.org/protobuf v1.35.2
 	gorm.io/driver/postgres v1.5.11
