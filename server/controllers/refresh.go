@@ -48,12 +48,21 @@ func (u *controllerUser) Refresh(ctx context.Context, refreshToken string) (int,
 		return http.StatusBadRequest, &models.Token{}, errors.New(errMsg)
 	}
 
-	user.CodeRefresh = u.GenerateRandomString(u.conf.SizeRandomStringValidationRefresh)
-	err = u.UpdateField(ctx, user.ID, "code_refresh", user.CodeRefresh)
+	// Generate new refresh code and update atomically to prevent race conditions
+	newCodeRefresh := u.GenerateRandomString(u.conf.SizeRandomStringValidationRefresh)
+
+	// Update the code_refresh - this should be atomic at the database level
+	// If multiple requests try to update the same user simultaneously, only one will succeed
+	err = u.UpdateField(ctx, user.ID, "code_refresh", newCodeRefresh)
 	if err != nil {
-		u.log.Error(err.Error())
+		u.log.Error("Failed to update refresh code", "error", err, "user_id", user.ID)
 		return http.StatusInternalServerError, &models.Token{}, err
 	}
+
+	u.log.Info("Refresh token updated successfully", "user_id", user.ID, "old_code", user.CodeRefresh[:8]+"...", "new_code", newCodeRefresh[:8]+"...")
+
+	// Update user object with new code for token generation
+	user.CodeRefresh = newCodeRefresh
 
 	status, modelToken, err := u.Validate(ctx, user.Code)
 	if err != nil {

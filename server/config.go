@@ -48,15 +48,25 @@ func checkEnvVarsConf(conf *models.Config) {
 	}
 	conf.SizeRandomStringValidationRefresh = sizeRandomStringValidationRefresh
 	conf.Issuer = os.Getenv("Issuer")
-	conf.JWTKey = []byte(os.Getenv("JWT_KEY"))
+	jwtKey := os.Getenv("JWT_KEY")
+	if len(jwtKey) < 32 {
+		log.Fatalf(`JWT_KEY must be at least 32 characters long for security, got %d characters`, len(jwtKey))
+	}
+	conf.JWTKey = []byte(jwtKey)
 	tokenExpirationTime, err := strconv.Atoi(os.Getenv("TOKEN_EXPIRATION_TIME"))
 	if err != nil {
 		log.Fatalf(`Missing TOKEN_EXPIRATION_TIME env var`)
+	}
+	if tokenExpirationTime <= 0 {
+		log.Fatalf(`TOKEN_EXPIRATION_TIME must be positive, got %d`, tokenExpirationTime)
 	}
 	conf.TokenExpirationTime = tokenExpirationTime
 	tokenExpirationTimeRefresh, err := strconv.Atoi(os.Getenv("TOKEN_EXPIRATION_TIME_REFRESH"))
 	if err != nil {
 		log.Fatalf(`Missing TOKEN_EXPIRATION_TIME_REFRESH env var`)
+	}
+	if tokenExpirationTimeRefresh <= 0 {
+		log.Fatalf(`TOKEN_EXPIRATION_TIME_REFRESH must be positive, got %d`, tokenExpirationTimeRefresh)
 	}
 	conf.TokenExpirationTimeRefresh = tokenExpirationTimeRefresh
 	conf.ENV = os.Getenv("ENV")

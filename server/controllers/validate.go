@@ -42,6 +42,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 	}
 
 	expirationTime := getExpirationTime(uint(u.conf.TokenExpirationTime))
+	u.log.Info("Generating access token", "email", user.Email, "expires_at", expirationTime.Unix(), "now", time.Now().UTC().Unix())
 
 	claims := &dto.ClaimsResponse{
 		Email:      user.Email,
@@ -61,6 +62,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 	}
 
 	expirationTimeRefresh := getExpirationTime(uint(u.conf.TokenExpirationTimeRefresh))
+	u.log.Info("Generating refresh token", "email", user.Email, "refresh_expires_at", expirationTimeRefresh.Unix(), "now", time.Now().UTC().Unix())
 
 	claimsRefresh := &dto.ClaimsRefreshResponse{
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -68,7 +70,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 			Issuer:    u.conf.Issuer,
 		},
 		CodeRefresh: user.CodeRefresh,
-		DeviceInfo: createDeviceInfo(user),
+		DeviceInfo:  createDeviceInfo(user),
 	}
 	tokenRefresh := jwt.NewWithClaims(jwt.SigningMethodHS256, claimsRefresh)
 	tokenRefreshString, err := tokenRefresh.SignedString(u.conf.JWTKey)
