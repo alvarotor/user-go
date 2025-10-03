@@ -42,7 +42,7 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 	}
 
 	expirationTime := getExpirationTime(uint(u.conf.TokenExpirationTime))
-	u.log.Info("Generating access token", "email", user.Email, "expires_at", expirationTime.Unix(), "now", time.Now().UTC().Unix())
+	u.log.Info("Generating access token", "email", user.Email, "token_expiration_config", u.conf.TokenExpirationTime, "expires_at", expirationTime.Unix(), "now", time.Now().UTC().Unix())
 
 	claims := &dto.ClaimsResponse{
 		Email:      user.Email,
@@ -62,7 +62,11 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 	}
 
 	expirationTimeRefresh := getExpirationTime(uint(u.conf.TokenExpirationTimeRefresh))
-	u.log.Info("Generating refresh token", "email", user.Email, "refresh_expires_at", expirationTimeRefresh.Unix(), "now", time.Now().UTC().Unix())
+	codeRefreshPreview := user.CodeRefresh
+	if len(codeRefreshPreview) > 8 {
+		codeRefreshPreview = codeRefreshPreview[:8] + "..."
+	}
+	u.log.Info("Generating refresh token", "email", user.Email, "refresh_expiration_config", u.conf.TokenExpirationTimeRefresh, "code_refresh", codeRefreshPreview, "refresh_expires_at", expirationTimeRefresh.Unix(), "now", time.Now().UTC().Unix())
 
 	claimsRefresh := &dto.ClaimsRefreshResponse{
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -86,6 +90,13 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 		TokenRefresh:        tokenRefreshString,
 		TokenRefreshExpires: expirationTimeRefresh,
 	}
+
+	u.log.Info("Validation completed successfully",
+		"email", user.Email,
+		"token_length", len(tokenString),
+		"refresh_token_length", len(tokenRefreshString),
+		"expires_in_seconds", int(expirationTime.Sub(time.Now().UTC()).Seconds()),
+		"refresh_expires_in_seconds", int(expirationTimeRefresh.Sub(time.Now().UTC()).Seconds()))
 
 	return http.StatusOK, model, nil
 }

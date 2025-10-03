@@ -28,6 +28,10 @@ func main() {
 	l := initLogger()
 
 	l.Info("User service starting in environment: ", "env", conf.ENV)
+	l.Info("JWT Configuration",
+		"token_expiration", conf.TokenExpirationTime,
+		"refresh_expiration", conf.TokenExpirationTimeRefresh,
+		"jwt_key_length", len(conf.JWTKey))
 
 	dbUser := db.GetDB_PG(&conf, l)
 
