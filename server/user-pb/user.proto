@@ -101,6 +101,8 @@ message UserResponse {
   string code = 7;
   google.protobuf.Timestamp code_expire = 8;
   string bucket = 9;
+  int64 access_token_expires_at = 10;  // Unix timestamp
+  int64 refresh_token_expires_at = 11; // Unix timestamp
 }
 
 message UserValidateRequest {
