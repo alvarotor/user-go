@@ -2,59 +2,7 @@
 
 ## CRITICAL ISSUES
 
-### 1. **No Password-Based Authentication**
-**Problem**: The system uses email-based code authentication instead of password authentication, which violates the requirement for username/password login.
-
-**Severity**: Critical
-
-**Location**: `server/controllers/login.go`, `server/controllers/validate.go`
-
-**Suggested Fix**:
-- Implement proper password hashing using bcrypt or Argon2
-- Add password field to User model
-- Modify login flow to require password verification
-
-**Security Best Practice**: Always use secure password hashing with appropriate work factors (bcrypt cost ≥ 12, Argon2 with sufficient parameters).
-
-### 2. **Weak Random Number Generation for Security Tokens**
-**Problem**: Uses `golang.org/x/exp/rand` with time-based seeding instead of `crypto/rand` for generating authentication codes.
-
-**Severity**: Critical
-
-**Location**: `server/controllers/login.go:67`
-
-**Suggested Fix**:
-```go
-import "crypto/rand"
-
-func (u *controllerUser) GenerateRandomString(length int) string {
-    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    b := make([]byte, length)
-    if _, err := rand.Read(b); err != nil {
-        u.log.Error(err.Error())
-        return ""
-    }
-    for i := range b {
-        b[i] = charset[b[i]%byte(len(charset))]
-    }
-    return string(b)
-}
-```
-
-**Security Best Practice**: Use cryptographically secure random number generators (`crypto/rand`) for all security-sensitive operations.
-
-### 3. **Missing Authorization on Admin Status Updates**
-**Problem**: `UpdateUserAdminStatus` RPC method has no authorization checks - any authenticated user can promote themselves or others to admin.
-
-**Severity**: Critical
-
-**Location**: `server/server/update_admin_status.go`, `server/controllers/admin_status.go`
-
-**Suggested Fix**: Add authorization middleware requiring SuperAdmin role for admin status changes.
-
-**Security Best Practice**: Implement proper role-based access control (RBAC) with authorization checks on all privileged operations.
-
-### 4. **Inadequate Token Revocation**
+### 1. **Inadequate Token Revocation**
 **Problem**: Logout only marks codes as "OUT" but doesn't invalidate existing JWT tokens. Tokens remain valid until expiry.
 
 **Severity**: High
@@ -67,7 +15,7 @@ func (u *controllerUser) GenerateRandomString(length int) string {
 
 ## HIGH SEVERITY ISSUES
 
-### 5. **JWT Secret Key Exposure Risk**
+### 2. **JWT Secret Key Exposure Risk**
 **Problem**: JWT key loaded from environment variable without validation of key strength.
 
 **Severity**: High
@@ -81,7 +29,7 @@ func (u *controllerUser) GenerateRandomString(length int) string {
 
 **Security Best Practice**: Use sufficiently long, randomly generated keys and implement key rotation procedures.
 
-### 6. **Device Fingerprinting Without Proper Validation**
+### 3. **Device Fingerprinting Without Proper Validation**
 **Problem**: Device info comparison in `TokenToUser` is case-sensitive and may not properly prevent token theft.
 
 **Severity**: High
@@ -95,7 +43,7 @@ func (u *controllerUser) GenerateRandomString(length int) string {
 
 **Security Best Practice**: Use robust device fingerprinting with multiple factors and proper normalization.
 
-### 7. **Refresh Token Reuse Vulnerability**
+### 4. **Refresh Token Reuse Vulnerability**
 **Problem**: Refresh tokens are rotated but old tokens aren't immediately invalidated, allowing potential replay attacks.
 
 **Severity**: High
@@ -108,7 +56,7 @@ func (u *controllerUser) GenerateRandomString(length int) string {
 
 ## MEDIUM SEVERITY ISSUES
 
-### 8. **Missing Rate Limiting**
+### 5. **Missing Rate Limiting**
 **Problem**: No rate limiting on authentication endpoints, vulnerable to brute force attacks.
 
 **Severity**: Medium
@@ -119,7 +67,7 @@ func (u *controllerUser) GenerateRandomString(length int) string {
 
 **Security Best Practice**: Apply rate limiting to prevent brute force and DoS attacks on authentication endpoints.
 
-### 9. **Insufficient Token Validation**
+### 6. **Insufficient Token Validation**
 **Problem**: Token validation doesn't check for algorithm confusion attacks or token reuse.
 
 **Severity**: Medium
@@ -133,7 +81,7 @@ func (u *controllerUser) GenerateRandomString(length int) string {
 
 **Security Best Practice**: Validate JWT algorithm and implement unique token identifiers.
 
-### 10. **Code Expiration Logic Flaw**
+### 7. **Code Expiration Logic Flaw**
 **Problem**: Validation codes expire after 10 minutes but refresh tokens can extend this indefinitely through refresh cycles.
 
 **Severity**: Medium
@@ -146,7 +94,7 @@ func (u *controllerUser) GenerateRandomString(length int) string {
 
 ## LOW SEVERITY ISSUES
 
-### 11. **Information Disclosure in Logs**
+### 8. **Information Disclosure in Logs**
 **Problem**: Authentication codes logged in plain text.
 
 **Severity**: Low
@@ -157,7 +105,7 @@ func (u *controllerUser) GenerateRandomString(length int) string {
 
 **Security Best Practice**: Never log sensitive authentication data.
 
-### 12. **Missing Input Validation**
+### 9. **Missing Input Validation**
 **Problem**: Limited input validation on token and code parameters.
 
 **Severity**: Low
@@ -170,11 +118,8 @@ func (u *controllerUser) GenerateRandomString(length int) string {
 
 ## IMMEDIATE FIXES REQUIRED
 
-1. **Implement password authentication** with secure hashing
-2. **Replace weak random generation** with crypto/rand
-3. **Add authorization checks** for admin operations
-4. **Implement proper token blacklisting** for logout
-5. **Add rate limiting** to authentication endpoints
+1. **Implement proper token blacklisting** for logout
+2. **Add rate limiting** to authentication endpoints
 
 ## RECOMMENDED SECURITY ENHANCEMENTS
 
