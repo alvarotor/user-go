@@ -12,14 +12,14 @@ import (
 
 func (s *UserServer) Create(ctx context.Context, req *pb.UserRequest) (*pb.UserIDResponse, error) {
 	user := models.User{
-		Email:           req.Email,
-		Name:            req.Name,
-		ProfilePic:      req.ProfilePic,
-		Validated:       false,
-		Admin:           false,
-		SuperAdmin:      false,
-		Code:            "",
-		CodeExpire:      time.Time{},
+		Email:      req.Email,
+		Name:       req.Name,
+		ProfilePic: req.ProfilePic,
+		Validated:  false,
+		Admin:      false,
+		SuperAdmin: false,
+		Code:       "",
+		CodeExpire: time.Time{},
 	}
 
 	s.Log.Info(fmt.Sprintf("%v\n", user))

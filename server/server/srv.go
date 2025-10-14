@@ -11,7 +11,7 @@ type UserServer struct {
 	pb.UnimplementedUserServer
 	// users map[uint32]*pb.UserResponse
 	UserController controllers.IControllerUser
-	Log        *slog.Logger
+	Log            *slog.Logger
 }
 
 func NewServer(

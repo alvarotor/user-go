@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"strings"
 	"time"
@@ -102,6 +103,16 @@ func (u *controllerUser) Validate(c context.Context, code string) (int, models.T
 		TokenExpires:        expirationTime,
 		TokenRefresh:        tokenRefreshString,
 		TokenRefreshExpires: expirationTimeRefresh,
+	}
+
+	// Validate the generated access token before returning success
+	// This prevents returning HTTP 200 with invalid/expired tokens
+	parsedToken, err := jwt.ParseWithClaims(tokenString, &dto.ClaimsResponse{}, func(token *jwt.Token) (any, error) {
+		return u.conf.JWTKey, nil
+	})
+	if err := u.validateToken(parsedToken, err); err != nil {
+		u.log.Error("Generated access token validation failed", "error", err)
+		return http.StatusInternalServerError, models.Token{}, errors.New("failed to generate valid access token")
 	}
 
 	u.log.Info("Validation completed successfully",

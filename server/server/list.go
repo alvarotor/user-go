@@ -19,15 +19,15 @@ func (s *UserServer) List(ctx context.Context, _ *emptypb.Empty) (*pb.ListUsersR
 
 	for _, user := range users {
 		pbUser := pb.UserResponse{
-			Email:           user.Email,
-			Name:            user.Name,
-			ProfilePic:      user.ProfilePic,
-			Validated:       user.Validated,
-			Admin:           user.Admin,
-			SuperAdmin:      user.SuperAdmin,
-			Code:            user.Code,
-			CodeExpire:      timestamppb.New(user.CodeExpire),
-			Bucket:          user.Bucket,
+			Email:      user.Email,
+			Name:       user.Name,
+			ProfilePic: user.ProfilePic,
+			Validated:  user.Validated,
+			Admin:      user.Admin,
+			SuperAdmin: user.SuperAdmin,
+			Code:       user.Code,
+			CodeExpire: timestamppb.New(user.CodeExpire),
+			Bucket:     user.Bucket,
 		}
 		pbUsers = append(pbUsers, &pbUser)
 	}
